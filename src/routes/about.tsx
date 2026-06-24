@@ -62,7 +62,7 @@ function About() {
             <div className="absolute left-0 top-0 bottom-0 led-strip-v" />
             <div className="pl-8 md:pl-12 reveal">
               <img
-                src={photos.img0003}
+                src={photos.victoria}
                 alt="Victoria Grant — owner and registered electrician"
                 className="w-full max-w-md rounded-md object-cover aspect-[4/5]"
                 style={{
