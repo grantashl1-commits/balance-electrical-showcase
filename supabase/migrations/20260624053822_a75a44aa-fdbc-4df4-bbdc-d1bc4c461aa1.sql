@@ -1,0 +1,1 @@
+DROP POLICY IF EXISTS "balance_photos_public_read" ON storage.objects;
