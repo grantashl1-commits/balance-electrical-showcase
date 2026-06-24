@@ -28,6 +28,14 @@ function Contact() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [firstName, setFirstName] = useState("");
+  const [serviceType, setServiceType] = useState("New residential build");
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    const serviceParam = params.get("service");
+    if (serviceParam) setServiceType(decodeURIComponent(serviceParam));
+  }, []);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
