@@ -78,7 +78,7 @@ export function SiteLayout({ children }: { children: ReactNode }) {
           <div className="md:col-span-2">
             <img src={photos.logo} alt="Balance Electrical" className="h-10 w-auto mb-5" />
             <p className="text-sm text-muted-foreground max-w-sm leading-relaxed">
-              Considered residential electrical work across Queenstown, Wānaka and Central Otago.
+              Considered residential electrical work across Taupō and the surrounding district.
               Owner-operated by Victoria — every detail measured, every finish quiet.
             </p>
             <img
