@@ -83,7 +83,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { title: "Electrician Taupō | Solar, EV Chargers & New Builds | Balance Electrical" },
       { name: "description", content: "Victoria Grant is a registered electrician based in Taupō. New builds, renovations, solar installation, heat pumps, EV chargers and commercial electrical work across the Taupō district." },
       { name: "author", content: "Balance Electrical" },
-      { name: "theme-color", content: "#0A0A0A" },
+      { name: "theme-color", content: "#3A3E30" },
       { property: "og:title", content: "Balance Electrical — Electrician Taupō" },
       { property: "og:description", content: "Considered residential electrical work across Taupō and the Taupō district." },
       { property: "og:type", content: "website" },

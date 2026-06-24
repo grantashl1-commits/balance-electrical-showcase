@@ -148,13 +148,13 @@ function AreasOfExpertise() {
           className="absolute inset-0"
           style={{
             background:
-              "radial-gradient(ellipse at 50% 50%, rgba(201,147,58,0.18) 0%, transparent 65%), #0A0A0A",
+              "radial-gradient(ellipse at 50% 50%, rgba(138, 144, 112,0.18) 0%, transparent 65%), #3A3E30",
             opacity: 0.85,
           }}
         />
         <div className="relative z-10 mx-auto max-w-7xl px-6 h-full flex flex-col justify-end pb-20">
           <p
-            className="reveal text-[10px] uppercase tracking-[0.2em] text-[#C9933A] mb-4"
+            className="reveal text-[10px] uppercase tracking-[0.2em] text-[#8A9070] mb-4"
             style={{ fontFamily: "Inter, ui-sans-serif, system-ui, sans-serif" }}
           >
             WHAT WE DO
@@ -166,7 +166,7 @@ function AreasOfExpertise() {
             Areas of expertise.
           </h1>
           <p
-            className="reveal mt-4 text-[18px] text-[#888880] max-w-2xl"
+            className="reveal mt-4 text-[18px] text-[#C4C0B4] max-w-2xl"
             style={{ fontFamily: "Inter, ui-sans-serif, system-ui, sans-serif", fontWeight: 300 }}
           >
             Registered electrical services across Taupō and the surrounding district.
@@ -180,7 +180,7 @@ function AreasOfExpertise() {
         const even = i % 2 === 0;
 
         return (
-          <section key={s.num} className="relative overflow-hidden bg-[#0A0A0A]">
+          <section key={s.num} className="relative overflow-hidden bg-[#3A3E30]">
             {/* Subtle background image */}
             <img
               src={s.bg}
@@ -195,16 +195,16 @@ function AreasOfExpertise() {
                   <div className={`absolute top-0 bottom-0 led-strip-v ${even ? "left-0" : ""}`} />
                   <div className={even ? "pl-8 md:pl-12" : ""}>
                     <p
-                      className="reveal text-[10px] uppercase tracking-[0.25em] text-[#C9933A] mb-4"
+                      className="reveal text-[10px] uppercase tracking-[0.25em] text-[#8A9070] mb-4"
                       style={{ fontFamily: "Inter, ui-sans-serif, system-ui, sans-serif" }}
                     >
                       {s.num}
                     </p>
-                    <h2 className="reveal font-display text-3xl md:text-4xl lg:text-5xl text-[#F5F0E8] mb-5" data-delay="60">
+                    <h2 className="reveal font-display text-3xl md:text-4xl lg:text-5xl text-[#F5F2EC] mb-5" data-delay="60">
                       {s.heading}
                     </h2>
                     <p
-                      className="reveal text-[16px] leading-relaxed text-[#888880] mb-8"
+                      className="reveal text-[16px] leading-relaxed text-[#C4C0B4] mb-8"
                       style={{ fontFamily: "Inter, ui-sans-serif, system-ui, sans-serif", fontWeight: 300 }}
                       data-delay="120"
                     >
@@ -223,11 +223,11 @@ function AreasOfExpertise() {
                               width: "4px",
                               height: "4px",
                               borderRadius: "50%",
-                              backgroundColor: "#C9933A",
+                              backgroundColor: "#8A9070",
                             }}
                           />
                           <span
-                            className="text-[14px] leading-relaxed text-[#888880]"
+                            className="text-[14px] leading-relaxed text-[#C4C0B4]"
                             style={{ fontFamily: "Inter, ui-sans-serif, system-ui, sans-serif" }}
                           >
                             {b}
@@ -237,7 +237,7 @@ function AreasOfExpertise() {
                     </ul>
                     {"closing" in s && (
                       <p
-                        className="reveal mt-6 text-[14px] leading-relaxed text-[#888880]"
+                        className="reveal mt-6 text-[14px] leading-relaxed text-[#C4C0B4]"
                         style={{ fontFamily: "Inter, ui-sans-serif, system-ui, sans-serif" }}
                         data-delay={String(180 + s.bullets.length * 60)}
                       >
@@ -247,7 +247,7 @@ function AreasOfExpertise() {
                     <div className="reveal mt-8" data-delay={String(240 + s.bullets.length * 60)}>
                       <Link
                         to="/contact"
-                        className="inline-flex items-center gap-1 text-[#C9933A] text-sm hover:gap-2 transition-all"
+                        className="inline-flex items-center gap-1 text-[#8A9070] text-sm hover:gap-2 transition-all"
                         style={{ fontFamily: "Inter, ui-sans-serif, system-ui, sans-serif" }}
                       >
                         Get a quote
@@ -266,7 +266,7 @@ function AreasOfExpertise() {
                       className="w-full rounded-md object-cover aspect-[4/3]"
                       style={{
                         opacity: 0.65,
-                        boxShadow: "0 0 0 1px rgba(201,147,58,0.10), 0 8px 40px -15px rgba(201,147,58,0.12)",
+                        boxShadow: "0 0 0 1px rgba(138, 144, 112,0.10), 0 8px 40px -15px rgba(138, 144, 112,0.12)",
                       }}
                     />
                   </div>
@@ -288,7 +288,7 @@ function AreasOfExpertise() {
             Not sure what you need?
           </h2>
           <p
-            className="reveal text-[#888880] text-lg leading-relaxed mb-10"
+            className="reveal text-[#C4C0B4] text-lg leading-relaxed mb-10"
             style={{ fontFamily: "Inter, ui-sans-serif, system-ui, sans-serif" }}
             data-delay="100"
           >
@@ -297,9 +297,9 @@ function AreasOfExpertise() {
           <div className="reveal" data-delay="200">
             <Link
               to="/contact"
-              className="inline-flex items-center gap-2 px-8 py-3 rounded-full text-[#0A0A0A] font-medium transition-all duration-300 hover:shadow-[0_0_24px_rgba(201,147,58,0.4)]"
+              className="inline-flex items-center gap-2 px-8 py-3 rounded-full text-[#3A3E30] font-medium transition-all duration-300 hover:shadow-[0_0_24px_rgba(138, 144, 112,0.4)]"
               style={{
-                backgroundColor: "#C9933A",
+                backgroundColor: "#8A9070",
                 fontFamily: "Inter, ui-sans-serif, system-ui, sans-serif",
               }}
             >
