@@ -95,4 +95,73 @@
       radial-gradient(ellipse at bottom, oklch(0.22 0.014 60), oklch(0.16 0.012 60));
   }
   .hairline { border-bottom: 1px solid color-mix(in oklch, var(--brass) 25%, transparent); }
+
+  /* LED strip — horizontal */
+  .led-strip-h {
+    height: 1px;
+    width: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(201, 147, 58, 0.15) 15%,
+      rgba(201, 147, 58, 0.45) 50%,
+      rgba(201, 147, 58, 0.15) 85%,
+      transparent 100%
+    );
+    box-shadow: 0 0 6px rgba(201, 147, 58, 0.2);
+  }
+
+  /* LED strip — vertical */
+  .led-strip-v {
+    width: 1px;
+    height: 100%;
+    background: linear-gradient(
+      180deg,
+      transparent 0%,
+      rgba(201, 147, 58, 0.15) 15%,
+      rgba(201, 147, 58, 0.45) 50%,
+      rgba(201, 147, 58, 0.15) 85%,
+      transparent 100%
+    );
+    box-shadow: 0 0 6px rgba(201, 147, 58, 0.2);
+  }
+
+  /* Radial amber spotlight */
+  .spotlight-amber {
+    background:
+      radial-gradient(ellipse at 50% 0%, rgba(201, 147, 58, 0.18) 0%, transparent 65%),
+      #0A0A0A;
+  }
+
+  /* Card glow effect */
+  .card-glow {
+    box-shadow: 0 0 0 1px rgba(201, 147, 58, 0.12), 0 8px 40px -15px rgba(201, 147, 58, 0.15);
+  }
+
+  /* Scroll reveal */
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .reveal.revealed {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* EWRB credential block */
+  .credential-block {
+    display: inline-flex;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 20px;
+    border: 0.5px solid rgba(201, 147, 58, 0.3);
+    border-radius: 8px;
+    transition: border-color 0.4s ease, box-shadow 0.4s ease;
+  }
+  .credential-block:hover {
+    border-color: rgba(201, 147, 58, 0.7);
+    box-shadow: 0 0 20px rgba(201, 147, 58, 0.15);
+  }
 }

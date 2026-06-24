@@ -5,7 +5,7 @@ import { photos } from "@/lib/photos";
 const nav = [
   { to: "/", label: "Home" },
   { to: "/about", label: "About" },
-  { to: "/services", label: "Services" },
+  { to: "/areas-of-expertise", label: "Areas of Expertise" },
   { to: "/projects", label: "Projects" },
   { to: "/contact", label: "Contact" },
 ];

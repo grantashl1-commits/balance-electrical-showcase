@@ -20,4 +20,6 @@ export const photos = {
   img0419: enc("IMG_0419.jpg.jpeg"),
   media: enc("media.jpg.jpeg"),
   victoria: enc("victoria-profile.jpeg"),
+  img0004c: enc("IMG_0004_c.jpg.jpeg"),
+  sparrowhawkKinloch: enc("sparrowhawk-kinloch.jpg.jpeg"),
 };

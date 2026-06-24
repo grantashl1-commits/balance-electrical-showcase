@@ -117,7 +117,7 @@ function Home() {
               ))}
             </ul>
             <Link
-              to="/services"
+              to="/areas-of-expertise"
               className="mt-10 inline-flex items-center px-6 py-3 rounded-full border border-primary/40 text-primary hover:bg-primary/10 transition-all"
             >
               Full service list →
