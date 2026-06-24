@@ -193,7 +193,7 @@ function Contact() {
             <p className="text-xs uppercase tracking-[0.25em] text-primary mb-3">Response</p>
             <p className="text-muted-foreground">Within 24 hours. Site visits booked from there.</p>
           </div>
-          <img src={photos.ewrbLogo} alt="EWRB Registered" className="h-14 w-auto opacity-90" />
+          
         </aside>
       </section>
     </SiteLayout>
