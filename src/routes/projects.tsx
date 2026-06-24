@@ -69,7 +69,7 @@ function Projects() {
 
       <section className="border-t border-border/50 mt-16">
         <div className="mx-auto max-w-6xl px-6 py-24 grid md:grid-cols-2 gap-12 items-center">
-          <img src={photos.media} alt="As featured in media" className="w-full aspect-[4/3] object-cover rounded-md" />
+          <img src={photos.media} loading="lazy" decoding="async" alt="As featured in media" className="w-full aspect-[4/3] object-cover rounded-md" />
           <div>
             <p className="text-sm uppercase tracking-[0.3em] text-primary mb-4">Featured</p>
             <h2 className="font-display text-4xl md:text-5xl mb-6">In good company</h2>

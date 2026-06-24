@@ -158,7 +158,7 @@ function Home() {
       {/* SERVICES TEASER */}
       <section className="border-t border-border/50">
         <div className="mx-auto max-w-7xl px-6 py-24 grid md:grid-cols-2 gap-16 items-center">
-          <img src={photos.img0011} alt="Detail of finished electrical work" className="rounded-md w-full aspect-[4/5] object-cover" />
+          <img src={photos.img0011} alt="Detail of finished electrical work" loading="lazy" decoding="async" className="rounded-md w-full aspect-[4/5] object-cover" />
           <div>
             <p className="text-sm uppercase tracking-[0.3em] text-primary mb-4">What we do</p>
             <h2 className="font-display text-4xl md:text-5xl text-balance mb-6">
@@ -194,7 +194,7 @@ function Home() {
       {/* OWNER */}
       <section className="border-t border-border/50 bg-card/40">
         <div className="mx-auto max-w-6xl px-6 py-24 grid md:grid-cols-[1fr_1.4fr] gap-14 items-center">
-          <img src={photos.victoria} alt="Victoria, owner of Balance Electrical" className="rounded-md w-full aspect-square object-cover glow" />
+          <img src={photos.victoria} alt="Victoria, owner of Balance Electrical" loading="lazy" decoding="async" className="rounded-md w-full aspect-square object-cover glow" />
           <div>
             <p className="text-sm uppercase tracking-[0.3em] text-primary mb-4">Owner-operator</p>
             <h2 className="font-display text-4xl md:text-5xl mb-6">Meet Victoria</h2>
