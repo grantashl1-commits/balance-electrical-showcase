@@ -51,7 +51,7 @@ function Contact() {
                 <Field label="Your name" name="name" required />
                 <Field label="Email" name="email" type="email" required />
                 <Field label="Phone" name="phone" type="tel" />
-                <Field label="Location" name="location" placeholder="Queenstown, Wānaka…" />
+                <Field label="Location" name="location" placeholder="Taupō, Kinloch…" />
               </div>
               <div className="mt-6">
                 <label className="block text-xs uppercase tracking-[0.2em] text-muted-foreground mb-2">
