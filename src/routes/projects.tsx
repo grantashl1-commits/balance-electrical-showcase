@@ -6,9 +6,9 @@ export const Route = createFileRoute("/projects")({
   head: () => ({
     meta: [
       { title: "Projects — Balance Electrical" },
-      { name: "description", content: "A selection of recent residential electrical projects across Queenstown, Wānaka and Central Otago." },
+      { name: "description", content: "A selection of recent residential electrical projects across Taupō and the Taupō district." },
       { property: "og:title", content: "Projects — Balance Electrical" },
-      { property: "og:description", content: "Recent residential electrical work across the Southern Lakes." },
+      { property: "og:description", content: "Recent residential electrical work across Taupō and the surrounding district." },
       { property: "og:image", content: photos.fountainEntry },
     ],
   }),
