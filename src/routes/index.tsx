@@ -32,8 +32,8 @@ function Home() {
             Light, measured. Wiring, considered.
           </h1>
           <p className="mt-6 max-w-xl text-lg text-muted-foreground leading-relaxed">
-            Residential electrical design and installation across Queenstown,
-            Wānaka and Central Otago — owner-operated by Victoria.
+            Residential electrical design and installation across Taupō and the
+            surrounding district — owner-operated by Victoria.
           </p>
           <div className="mt-10 flex flex-wrap gap-4">
             <Link
