@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { SiteLayout } from "@/components/SiteLayout";
 import { supabase } from "@/integrations/supabase/client";
 import { photos } from "@/lib/photos";
@@ -28,6 +28,14 @@ function Contact() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [firstName, setFirstName] = useState("");
+  const [serviceType, setServiceType] = useState("New residential build");
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    const serviceParam = params.get("service");
+    if (serviceParam) setServiceType(decodeURIComponent(serviceParam));
+  }, []);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -130,12 +138,15 @@ function Contact() {
                 </label>
                 <select
                   name="type"
+                  value={serviceType}
+                  onChange={(e) => setServiceType(e.target.value)}
                   className="w-full bg-input/60 border border-border rounded-md px-4 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
                 >
                   <option>New residential build</option>
                   <option>Renovation or addition</option>
                   <option>Lighting design</option>
                   <option>Solar & battery storage</option>
+                  <option>Air conditioning & heat pumps</option>
                   <option>EV charging</option>
                   <option>Heat pump installation</option>
                   <option>Pre-purchase report</option>

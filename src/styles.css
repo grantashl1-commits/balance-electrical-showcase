@@ -37,33 +37,35 @@
 /* Warm, quiet, premium — the glow of considered lighting at night */
 :root {
   --radius: 0.5rem;
-  --background: oklch(0.18 0.012 60);          /* deep warm charcoal */
-  --foreground: oklch(0.94 0.012 80);          /* warm ivory */
-  --card: oklch(0.22 0.014 60);
-  --card-foreground: oklch(0.94 0.012 80);
-  --popover: oklch(0.22 0.014 60);
-  --popover-foreground: oklch(0.94 0.012 80);
-  --primary: oklch(0.78 0.11 75);              /* warm brass */
-  --primary-foreground: oklch(0.18 0.012 60);
-  --secondary: oklch(0.26 0.015 60);
-  --secondary-foreground: oklch(0.94 0.012 80);
-  --muted: oklch(0.24 0.012 60);
-  --muted-foreground: oklch(0.72 0.018 75);
-  --accent: oklch(0.30 0.018 60);
-  --accent-foreground: oklch(0.94 0.012 80);
+  /* Balance Electrical — olive green brand palette */
+  --background: oklch(0.32 0.018 115);         /* #3A3E30 olive charcoal */
+  --foreground: oklch(0.95 0.012 90);          /* #F5F2EC warm ivory */
+  --card: oklch(0.38 0.020 115);               /* #4A4E3E */
+  --card-foreground: oklch(0.95 0.012 90);
+  --popover: oklch(0.38 0.020 115);
+  --popover-foreground: oklch(0.95 0.012 90);
+  --primary: oklch(0.65 0.045 115);            /* #8A9070 olive accent */
+  --primary-foreground: oklch(0.26 0.015 115); /* #2E3228 */
+  --secondary: oklch(0.42 0.020 115);
+  --secondary-foreground: oklch(0.95 0.012 90);
+  --muted: oklch(0.36 0.018 115);
+  --muted-foreground: oklch(0.78 0.015 95);    /* #C4C0B4 */
+  --accent: oklch(0.45 0.022 115);
+  --accent-foreground: oklch(0.95 0.012 90);
   --destructive: oklch(0.55 0.18 25);
   --destructive-foreground: oklch(0.98 0 0);
-  --border: oklch(0.30 0.012 60);
-  --input: oklch(0.28 0.012 60);
-  --ring: oklch(0.78 0.11 75);
-  --brass: oklch(0.78 0.11 75);
-  --brass-soft: oklch(0.85 0.08 80);
+  --border: oklch(0.42 0.018 115);             /* #4E5240 */
+  --input: oklch(0.40 0.018 115);
+  --ring: oklch(0.65 0.045 115);
+  --brass: oklch(0.65 0.045 115);
+  --brass-soft: oklch(0.72 0.040 115);
 }
 
 .dark {
-  --background: oklch(0.18 0.012 60);
-  --foreground: oklch(0.94 0.012 80);
+  --background: oklch(0.32 0.018 115);
+  --foreground: oklch(0.95 0.012 90);
 }
+
 
 @layer base {
   * { border-color: var(--color-border); }
@@ -103,12 +105,12 @@
     background: linear-gradient(
       90deg,
       transparent 0%,
-      rgba(201, 147, 58, 0.15) 15%,
-      rgba(201, 147, 58, 0.45) 50%,
-      rgba(201, 147, 58, 0.15) 85%,
+      rgba(138, 144, 112, 0.15) 15%,
+      rgba(138, 144, 112, 0.45) 50%,
+      rgba(138, 144, 112, 0.15) 85%,
       transparent 100%
     );
-    box-shadow: 0 0 6px rgba(201, 147, 58, 0.2);
+    box-shadow: 0 0 6px rgba(138, 144, 112, 0.2);
   }
 
   /* LED strip — vertical */
@@ -118,24 +120,24 @@
     background: linear-gradient(
       180deg,
       transparent 0%,
-      rgba(201, 147, 58, 0.15) 15%,
-      rgba(201, 147, 58, 0.45) 50%,
-      rgba(201, 147, 58, 0.15) 85%,
+      rgba(138, 144, 112, 0.15) 15%,
+      rgba(138, 144, 112, 0.45) 50%,
+      rgba(138, 144, 112, 0.15) 85%,
       transparent 100%
     );
-    box-shadow: 0 0 6px rgba(201, 147, 58, 0.2);
+    box-shadow: 0 0 6px rgba(138, 144, 112, 0.2);
   }
 
   /* Radial amber spotlight */
   .spotlight-amber {
     background:
-      radial-gradient(ellipse at 50% 0%, rgba(201, 147, 58, 0.18) 0%, transparent 65%),
-      #0A0A0A;
+      radial-gradient(ellipse at 50% 0%, rgba(138, 144, 112, 0.18) 0%, transparent 65%),
+      #3A3E30;
   }
 
   /* Card glow effect */
   .card-glow {
-    box-shadow: 0 0 0 1px rgba(201, 147, 58, 0.12), 0 8px 40px -15px rgba(201, 147, 58, 0.15);
+    box-shadow: 0 0 0 1px rgba(138, 144, 112, 0.12), 0 8px 40px -15px rgba(138, 144, 112, 0.15);
   }
 
   /* Scroll reveal */
@@ -156,12 +158,12 @@
     align-items: center;
     gap: 16px;
     padding: 14px 20px;
-    border: 0.5px solid rgba(201, 147, 58, 0.3);
+    border: 0.5px solid rgba(138, 144, 112, 0.3);
     border-radius: 8px;
     transition: border-color 0.4s ease, box-shadow 0.4s ease;
   }
   .credential-block:hover {
-    border-color: rgba(201, 147, 58, 0.7);
-    box-shadow: 0 0 20px rgba(201, 147, 58, 0.15);
+    border-color: rgba(138, 144, 112, 0.7);
+    box-shadow: 0 0 20px rgba(138, 144, 112, 0.15);
   }
 }
