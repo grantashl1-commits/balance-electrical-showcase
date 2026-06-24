@@ -69,8 +69,8 @@ function Projects() {
             <h2 className="font-display text-4xl md:text-5xl mb-6">In good company</h2>
             <p className="text-muted-foreground leading-relaxed">
               Our work has appeared alongside some of the architects, designers and builders
-              we most admire in the Southern Lakes — homes where the electrical layer is felt,
-              not seen.
+              we most admire across Taupō and the surrounding district — homes where the
+              electrical layer is felt, not seen.
             </p>
             <Link to="/contact" className="mt-8 inline-flex text-primary hover:underline">
               Talk to us about your project →
