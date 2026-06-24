@@ -74,8 +74,12 @@ function Home() {
         <img
           src={photos.twilight}
           alt="A lit home at twilight"
+          loading="eager"
+          fetchPriority="high"
+          decoding="async"
           className="absolute inset-0 h-full w-full object-cover"
         />
+
         <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-background/30 to-background" />
         <div className="relative z-10 mx-auto max-w-7xl px-6 h-full flex flex-col justify-end pb-24 md:pb-32">
           <p className="text-sm uppercase tracking-[0.3em] text-primary mb-6">Balance Electrical</p>
@@ -125,7 +129,10 @@ function Home() {
             View all projects →
           </Link>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div
+          data-mobile-carousel
+          className="grid grid-cols-1 md:grid-cols-3 gap-6"
+        >
           {[
             { src: photos.kitchen, label: "Kitchen" },
             { src: photos.living, label: "Living" },
@@ -138,17 +145,20 @@ function Home() {
               <img
                 src={p.src}
                 alt={p.label}
+                loading="lazy"
+                decoding="async"
                 className="aspect-[4/5] w-full object-cover transition-transform duration-700 group-hover:scale-105"
               />
             </figure>
           ))}
         </div>
+
       </section>
 
       {/* SERVICES TEASER */}
       <section className="border-t border-border/50">
         <div className="mx-auto max-w-7xl px-6 py-24 grid md:grid-cols-2 gap-16 items-center">
-          <img src={photos.img0011} alt="Detail of finished electrical work" className="rounded-md w-full aspect-[4/5] object-cover" />
+          <img src={photos.img0011} alt="Detail of finished electrical work" loading="lazy" decoding="async" className="rounded-md w-full aspect-[4/5] object-cover" />
           <div>
             <p className="text-sm uppercase tracking-[0.3em] text-primary mb-4">What we do</p>
             <h2 className="font-display text-4xl md:text-5xl text-balance mb-6">
@@ -184,7 +194,7 @@ function Home() {
       {/* OWNER */}
       <section className="border-t border-border/50 bg-card/40">
         <div className="mx-auto max-w-6xl px-6 py-24 grid md:grid-cols-[1fr_1.4fr] gap-14 items-center">
-          <img src={photos.victoria} alt="Victoria, owner of Balance Electrical" className="rounded-md w-full aspect-square object-cover glow" />
+          <img src={photos.victoria} alt="Victoria, owner of Balance Electrical" loading="lazy" decoding="async" className="rounded-md w-full aspect-square object-cover glow" />
           <div>
             <p className="text-sm uppercase tracking-[0.3em] text-primary mb-4">Owner-operator</p>
             <h2 className="font-display text-4xl md:text-5xl mb-6">Meet Victoria</h2>

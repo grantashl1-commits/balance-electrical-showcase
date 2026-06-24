@@ -167,3 +167,80 @@
     box-shadow: 0 0 20px rgba(138, 144, 112, 0.15);
   }
 }
+
+/* ============================================================
+   MOBILE OPTIMISATION — scoped to ≤768px; desktop unchanged
+   ============================================================ */
+@media (max-width: 768px) {
+  /* Typography */
+  h1 { font-size: 48px; line-height: 1.15; }
+  h2 { font-size: 36px; line-height: 1.2; }
+  h3 { font-size: 26px; }
+  h4 { font-size: 20px; }
+  body, p { font-size: 16px; line-height: 1.7; }
+
+  /* Tap targets */
+  a, button {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  /* Keep inline links from inheriting block sizing inside paragraphs */
+  p a, li a, nav a, footer a, .inline-link {
+    min-height: 0;
+    min-width: 0;
+    display: inline;
+  }
+
+  /* Form controls — 16px prevents iOS zoom */
+  input, select, textarea {
+    font-size: 16px;
+    padding: 14px 16px;
+    width: 100%;
+  }
+
+  /* Vertical LED strips hidden on mobile */
+  .led-strip-v { display: none; }
+
+  /* Mobile horizontal carousel for image grids */
+  [data-mobile-carousel] {
+    display: flex !important;
+    grid-template-columns: none !important;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    gap: 12px;
+    padding: 0 4px 8px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  [data-mobile-carousel]::-webkit-scrollbar { display: none; }
+  [data-mobile-carousel] > * {
+    flex: 0 0 80vw;
+    scroll-snap-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  h1 { font-size: 40px; }
+  h2 { font-size: 30px; }
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+  html { scroll-behavior: auto; }
+}
+
+/* iPhone safe-area insets */
+@supports (padding: env(safe-area-inset-bottom)) {
+  header { padding-top: env(safe-area-inset-top); }
+  footer { padding-bottom: calc(env(safe-area-inset-bottom)); }
+}
+
+/* Never allow horizontal scroll */
+html, body { overflow-x: hidden; }
+
