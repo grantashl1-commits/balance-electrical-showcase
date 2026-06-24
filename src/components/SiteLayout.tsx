@@ -100,9 +100,9 @@ export function SiteLayout({ children }: { children: ReactNode }) {
           <div>
             <h4 className="text-sm uppercase tracking-[0.2em] text-primary mb-4">Contact</h4>
             <ul className="space-y-2 text-sm text-muted-foreground">
-              <li><a href="mailto:victoria@balanceelectrical.co.nz" className="hover:text-primary">victoria@balanceelectrical.co.nz</a></li>
-              <li><a href="tel:+64210000000" className="hover:text-primary">+64 21 000 000</a></li>
-              <li>Queenstown · Wānaka · Central Otago</li>
+              <li><a href="mailto:enquire@balanceelectrical.co.nz" className="hover:text-primary">enquire@balanceelectrical.co.nz</a></li>
+              <li><a href="tel:+64279162077" className="hover:text-primary">+64 27 916 2077</a></li>
+              <li>Taupō · Central North Island · New Zealand</li>
             </ul>
           </div>
         </div>
