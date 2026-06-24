@@ -94,16 +94,16 @@ function Contact() {
         <aside className="space-y-10">
           <div>
             <p className="text-xs uppercase tracking-[0.25em] text-primary mb-3">Direct</p>
-            <a href="mailto:victoria@balanceelectrical.co.nz" className="block font-display text-2xl text-foreground hover:text-primary">
-              victoria@balanceelectrical.co.nz
+            <a href="mailto:enquire@balanceelectrical.co.nz" className="block font-display text-2xl text-foreground hover:text-primary">
+              enquire@balanceelectrical.co.nz
             </a>
-            <a href="tel:+64210000000" className="block font-display text-2xl text-foreground hover:text-primary mt-2">
-              +64 21 000 000
+            <a href="tel:+64279162077" className="block font-display text-2xl text-foreground hover:text-primary mt-2">
+              +64 27 916 2077
             </a>
           </div>
           <div>
             <p className="text-xs uppercase tracking-[0.25em] text-primary mb-3">Working across</p>
-            <p className="text-muted-foreground">Queenstown · Wānaka · Arrowtown · Hāwea · Cromwell · Central Otago.</p>
+            <p className="text-muted-foreground">Taupō · Kinloch · Acacia Bay · Kuratau · Turangi · Taupō district.</p>
           </div>
           <div>
             <p className="text-xs uppercase tracking-[0.25em] text-primary mb-3">Response</p>
