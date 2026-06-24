@@ -6,7 +6,7 @@ export const Route = createFileRoute("/about")({
   head: () => ({
     meta: [
       { title: "About — Victoria & Balance Electrical" },
-      { name: "description", content: "Owner-operated by Victoria. Considered residential electrical work across Queenstown, Wānaka and Central Otago." },
+      { name: "description", content: "Owner-operated by Victoria. Considered residential electrical work across Taupō and the Taupō district." },
       { property: "og:title", content: "About Balance Electrical" },
       { property: "og:description", content: "Meet Victoria — the owner-operator behind Balance Electrical." },
       { property: "og:image", content: photos.victoria },
