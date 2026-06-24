@@ -76,12 +76,12 @@ function Home() {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {[
-            { src: photos.kitchen, label: "Kitchen", place: "Queenstown" },
-            { src: photos.living, label: "Living", place: "Wānaka" },
-            { src: photos.fountainEntry, label: "Entry", place: "Arrowtown" },
-            { src: photos.img0005, label: "Joinery lighting", place: "Speargrass" },
-            { src: photos.img0419, label: "Stair detail", place: "Jacks Point" },
-            { src: photos.img0006, label: "Pendant rhythm", place: "Hāwea" },
+            { src: photos.kitchen, label: "Kitchen" },
+            { src: photos.living, label: "Living" },
+            { src: photos.fountainEntry, label: "Entry" },
+            { src: photos.img0005, label: "Joinery lighting" },
+            { src: photos.img0419, label: "Stair detail" },
+            { src: photos.img0006, label: "Pendant rhythm" },
           ].map((p) => (
             <figure key={p.src} className="group relative overflow-hidden rounded-md bg-card">
               <img
@@ -89,10 +89,6 @@ function Home() {
                 alt={p.label}
                 className="aspect-[4/5] w-full object-cover transition-transform duration-700 group-hover:scale-105"
               />
-              <figcaption className="absolute inset-x-0 bottom-0 p-5 bg-gradient-to-t from-background/90 to-transparent">
-                <p className="text-xs uppercase tracking-[0.25em] text-primary/90">{p.place}</p>
-                <p className="font-display text-xl text-foreground mt-1">{p.label}</p>
-              </figcaption>
             </figure>
           ))}
         </div>
