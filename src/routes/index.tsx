@@ -172,14 +172,11 @@ function Home() {
             <ul className="space-y-3 text-foreground/90">
               {["New residential builds", "Renovations & additions", "Lighting design & specification", "Solar & battery storage", "EV charging", "Heat pump & HVAC wiring", "Pre-purchase electrical reports"].map((s, i) => (
                 <li key={s} className="flex items-center gap-3">
-                  {s === "Solar & battery storage" ? (
-                    <Sun className="w-4 h-4 text-primary flex-shrink-0" />
-                  ) : (
-                    <span className="h-px w-6 bg-primary" />
-                  )}
+                  <span className="h-px w-6 bg-primary" />
                   <span className="text-sm">{s}</span>
                 </li>
               ))}
+
             </ul>
             <Link
               to="/areas-of-expertise"
