@@ -1,8 +1,14 @@
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import { createFileRoute, useRouter } from "@tanstack/react-router";
+import { useEffect } from "react";
 
 export const Route = createFileRoute("/services")({
-  beforeLoad: () => {
-    throw redirect({ to: "/areas-of-expertise", statusCode: 301 } as any);
-  },
-  component: () => null,
+  component: ServicesRedirect,
 });
+
+function ServicesRedirect() {
+  const router = useRouter();
+  useEffect(() => {
+    router.navigate({ to: "/areas-of-expertise", replace: true });
+  }, [router]);
+  return null;
+}
