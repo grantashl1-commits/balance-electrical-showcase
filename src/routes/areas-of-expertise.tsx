@@ -59,7 +59,7 @@ const sections = [
   {
     num: "03",
     heading: "Air conditioning & heat pumps",
-    bg: photos.img0004c,
+    bg: photos.living,
     intro:
       "Victoria is an experienced heat pump installer working with all major brands. Whether you need a single room unit or a multi-zone system for a larger home or commercial space, Balance Electrical handles supply, installation, and commissioning.",
     bullets: [
@@ -99,7 +99,7 @@ const sections = [
   {
     num: "06",
     heading: "New builds",
-    bg: photos.sparrowhawkKinloch,
+    bg: photos.fountainEntry,
     intro:
       "Balance Electrical works alongside builders, architects, and project managers to deliver the complete electrical fit-out for new residential builds — from first fix foundations through to final inspection and CCC.",
     bullets: [
