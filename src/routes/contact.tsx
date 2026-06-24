@@ -138,12 +138,15 @@ function Contact() {
                 </label>
                 <select
                   name="type"
+                  value={serviceType}
+                  onChange={(e) => setServiceType(e.target.value)}
                   className="w-full bg-input/60 border border-border rounded-md px-4 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
                 >
                   <option>New residential build</option>
                   <option>Renovation or addition</option>
                   <option>Lighting design</option>
                   <option>Solar & battery storage</option>
+                  <option>Air conditioning & heat pumps</option>
                   <option>EV charging</option>
                   <option>Heat pump installation</option>
                   <option>Pre-purchase report</option>
