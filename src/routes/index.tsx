@@ -74,8 +74,12 @@ function Home() {
         <img
           src={photos.twilight}
           alt="A lit home at twilight"
+          loading="eager"
+          fetchPriority="high"
+          decoding="async"
           className="absolute inset-0 h-full w-full object-cover"
         />
+
         <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-background/30 to-background" />
         <div className="relative z-10 mx-auto max-w-7xl px-6 h-full flex flex-col justify-end pb-24 md:pb-32">
           <p className="text-sm uppercase tracking-[0.3em] text-primary mb-6">Balance Electrical</p>
