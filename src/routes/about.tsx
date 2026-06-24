@@ -8,10 +8,16 @@ export const Route = createFileRoute("/about")({
   head: () => ({
     meta: [
       { title: "About Victoria Grant | Registered Electrician Taupō | Balance Electrical" },
-      { name: "description", content: "Victoria Grant is the owner and registered electrician behind Balance Electrical in Taupō. Hands-on, personal electrical work for residential and commercial clients across the Taupō district." },
+      { name: "description", content: "Victoria Grant is the registered electrician and owner of Balance Electrical in Taupō. Hands-on residential and commercial electrical work across the Taupō district." },
+      { name: "robots", content: "index, follow, max-image-preview:large" },
+      { name: "geo.region", content: "NZ-WKO" },
+      { name: "geo.placename", content: "Taupo" },
       { property: "og:title", content: "About Victoria Grant | Balance Electrical" },
       { property: "og:description", content: "Meet Victoria Grant — the owner and registered electrician behind Balance Electrical in Taupō." },
       { property: "og:image", content: photos.victoria },
+    ],
+    links: [
+      { rel: "canonical", href: "https://www.balanceelectrical.co.nz/about" },
     ],
   }),
   component: About,

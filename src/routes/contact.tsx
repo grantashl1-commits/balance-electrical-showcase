@@ -1,16 +1,23 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, type FormEvent } from "react";
 import { SiteLayout } from "@/components/SiteLayout";
+import { supabase } from "@/integrations/supabase/client";
 import { photos } from "@/lib/photos";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
     meta: [
-      { title: "Contact — Balance Electrical" },
-      { name: "description", content: "Request a quote or start a conversation with Victoria at Balance Electrical." },
-      { property: "og:title", content: "Contact Balance Electrical" },
-      { property: "og:description", content: "Request a quote or start a conversation with Victoria." },
+      { title: "Get a Quote | Electrician Taupō | Balance Electrical" },
+      { name: "description", content: "Request a quote from Victoria Grant, registered electrician in Taupō. New builds, solar, renovations, heat pumps, EV chargers and more across the Taupō district." },
+      { name: "robots", content: "index, follow, max-image-preview:large" },
+      { name: "geo.region", content: "NZ-WKO" },
+      { name: "geo.placename", content: "Taupo" },
+      { property: "og:title", content: "Get a Quote | Balance Electrical" },
+      { property: "og:description", content: "Request a quote from Victoria Grant, registered electrician in Taupō. New builds, solar, renovations, and more." },
       { property: "og:image", content: photos.fountainEntry },
+    ],
+    links: [
+      { rel: "canonical", href: "https://www.balanceelectrical.co.nz/contact" },
     ],
   }),
   component: Contact,
@@ -18,6 +25,47 @@ export const Route = createFileRoute("/contact")({
 
 function Contact() {
   const [sent, setSent] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
+  const [firstName, setFirstName] = useState("");
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(false);
+
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+
+    const full_name = (formData.get("name") as string || "").trim();
+    const phone = (formData.get("phone") as string || "").trim();
+    const email = (formData.get("email") as string || "").trim();
+    const suburb = (formData.get("location") as string || "").trim();
+    const service_type = (formData.get("type") as string || "").trim();
+    const message = (formData.get("message") as string || "").trim();
+
+    setFirstName(full_name.split(" ")[0]);
+
+    try {
+      const { error: invokeError } = await supabase.functions.invoke("send-balance-enquiry", {
+        body: { full_name, phone, email, suburb, service_type, message },
+      });
+
+      if (invokeError) {
+        console.error("Edge function error:", invokeError);
+        setError(true);
+        setLoading(false);
+        return;
+      }
+
+      setSent(true);
+    } catch (err) {
+      console.error("Submission error:", err);
+      setError(true);
+    }
+
+    setLoading(false);
+  };
 
   return (
     <SiteLayout>
@@ -37,13 +85,36 @@ function Contact() {
 
       <section className="mx-auto max-w-6xl px-6 py-16 grid md:grid-cols-[1.4fr_1fr] gap-14">
         <form
-          onSubmit={(e) => { e.preventDefault(); setSent(true); }}
+          onSubmit={handleSubmit}
           className="bg-card/70 border border-border/60 rounded-lg p-8 md:p-10 glow"
         >
-          {sent ? (
+          {loading ? (
             <div className="py-12 text-center">
-              <p className="font-display text-3xl text-primary mb-3">Thank you.</p>
-              <p className="text-muted-foreground">Victoria will reply within two working days.</p>
+              <p className="font-display text-2xl text-primary mb-3">Sending...</p>
+              <p className="text-muted-foreground">One moment.</p>
+            </div>
+          ) : error ? (
+            <div className="py-12 text-center">
+              <p className="font-display text-2xl text-primary mb-3">Something went wrong.</p>
+              <p className="text-muted-foreground">
+                Call Victoria directly on{" "}
+                <a href="tel:+64279162077" className="text-primary hover:underline">027 916 2077</a>.
+              </p>
+              <button
+                type="button"
+                onClick={() => setError(false)}
+                className="mt-6 inline-flex items-center px-6 py-2 rounded-full border border-primary/40 text-primary hover:bg-primary/10 transition-all text-sm"
+              >
+                Try again
+              </button>
+            </div>
+          ) : sent ? (
+            <div className="py-12 text-center">
+              <p className="font-display text-3xl text-primary mb-3">Thanks{firstName ? ` ${firstName}` : ""}.</p>
+              <p className="text-muted-foreground">Victoria will be in touch within 24 hours.</p>
+              <a href="tel:+64279162077" className="block mt-4 font-display text-xl text-foreground hover:text-primary">
+                027 916 2077
+              </a>
             </div>
           ) : (
             <>
@@ -64,7 +135,9 @@ function Contact() {
                   <option>New residential build</option>
                   <option>Renovation or addition</option>
                   <option>Lighting design</option>
+                  <option>Solar & battery storage</option>
                   <option>EV charging</option>
+                  <option>Heat pump installation</option>
                   <option>Pre-purchase report</option>
                   <option>Something else</option>
                 </select>
@@ -107,7 +180,7 @@ function Contact() {
           </div>
           <div>
             <p className="text-xs uppercase tracking-[0.25em] text-primary mb-3">Response</p>
-            <p className="text-muted-foreground">Within two working days. Site visits booked from there.</p>
+            <p className="text-muted-foreground">Within 24 hours. Site visits booked from there.</p>
           </div>
           <img src={photos.ewrbLogo} alt="EWRB Registered" className="h-14 w-auto opacity-90" />
         </aside>

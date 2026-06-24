@@ -1,15 +1,66 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/SiteLayout";
 import { photos } from "@/lib/photos";
+import { Sun } from "lucide-react";
+
+const ldJson = {
+  "@context": "https://schema.org",
+  "@type": "Electrician",
+  "name": "Balance Electrical",
+  "image": "https://www.balanceelectrical.co.nz/og-image.jpg",
+  "url": "https://www.balanceelectrical.co.nz",
+  "telephone": "+64279162077",
+  "email": "enquire@balanceelectrical.co.nz",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Taupo",
+    "addressRegion": "Waikato",
+    "addressCountry": "NZ",
+  },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": -38.6857,
+    "longitude": 176.0702,
+  },
+  "openingHoursSpecification": {
+    "@type": "OpeningHoursSpecification",
+    "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+    "opens": "07:30",
+    "closes": "17:30",
+  },
+  "priceRange": "$$",
+  "areaServed": [
+    "Taupo",
+    "Kinloch",
+    "Acacia Bay",
+    "Wairakei",
+    "Ātiamuri",
+    "Taupō District",
+    "Central North Island",
+  ],
+  "hasCredential": {
+    "@type": "EducationalOccupationalCredential",
+    "credentialCategory": "Registered Electrician — EWRB",
+  },
+};
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Balance Electrical — Residential electrical, considered" },
-      { name: "description", content: "Owner-operated by Victoria. Premium residential electrical design and installation across Taupō and the surrounding district." },
-      { property: "og:title", content: "Balance Electrical" },
+      { title: "Electrician Taupō | Solar, EV Chargers & New Builds | Balance Electrical" },
+      { name: "description", content: "Victoria Grant is a registered electrician based in Taupō. New builds, renovations, solar installation, heat pumps, EV chargers and commercial electrical work across the Taupō district." },
+      { name: "robots", content: "index, follow, max-image-preview:large" },
+      { name: "geo.region", content: "NZ-WKO" },
+      { name: "geo.placename", content: "Taupo" },
+      { property: "og:title", content: "Balance Electrical — Electrician Taupō" },
       { property: "og:description", content: "Considered residential electrical work across Taupō and the Taupō district." },
       { property: "og:image", content: photos.twilight },
+    ],
+    links: [
+      { rel: "canonical", href: "https://www.balanceelectrical.co.nz" },
+    ],
+    scripts: [
+      { type: "application/ld+json", children: JSON.stringify(ldJson) },
     ],
   }),
   component: Home,
@@ -109,9 +160,13 @@ function Home() {
               feel inevitable.
             </p>
             <ul className="space-y-3 text-foreground/90">
-              {["New residential builds", "Renovations & additions", "Lighting design & specification", "EV charging", "Heat pump & HVAC wiring", "Pre-purchase electrical reports"].map((s) => (
+              {["New residential builds", "Renovations & additions", "Lighting design & specification", "Solar & battery storage", "EV charging", "Heat pump & HVAC wiring", "Pre-purchase electrical reports"].map((s, i) => (
                 <li key={s} className="flex items-center gap-3">
-                  <span className="h-px w-6 bg-primary" />
+                  {s === "Solar & battery storage" ? (
+                    <Sun className="w-4 h-4 text-primary flex-shrink-0" />
+                  ) : (
+                    <span className="h-px w-6 bg-primary" />
+                  )}
                   <span className="text-sm">{s}</span>
                 </li>
               ))}

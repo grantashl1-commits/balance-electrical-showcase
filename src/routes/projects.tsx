@@ -5,11 +5,17 @@ import { photos } from "@/lib/photos";
 export const Route = createFileRoute("/projects")({
   head: () => ({
     meta: [
-      { title: "Projects — Balance Electrical" },
+      { title: "Projects | Electrician Taupō | Balance Electrical" },
       { name: "description", content: "A selection of recent residential electrical projects across Taupō and the Taupō district." },
+      { name: "robots", content: "index, follow, max-image-preview:large" },
+      { name: "geo.region", content: "NZ-WKO" },
+      { name: "geo.placename", content: "Taupo" },
       { property: "og:title", content: "Projects — Balance Electrical" },
       { property: "og:description", content: "Recent residential electrical work across Taupō and the surrounding district." },
       { property: "og:image", content: photos.fountainEntry },
+    ],
+    links: [
+      { rel: "canonical", href: "https://www.balanceelectrical.co.nz/projects" },
     ],
   }),
   component: Projects,

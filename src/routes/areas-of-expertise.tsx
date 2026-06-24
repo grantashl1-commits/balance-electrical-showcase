@@ -6,11 +6,18 @@ import { photos } from "@/lib/photos";
 export const Route = createFileRoute("/areas-of-expertise")({
   head: () => ({
     meta: [
-      { title: "Electrical Services Taupō | New Builds, Renovations, Heat Pumps, EV Chargers | Balance Electrical" },
-      { name: "description", content: "Registered electrical services in Taupō — new builds, renovations, heat pump installation, EV chargers, commercial fit-outs and maintenance. Balance Electrical, Victoria Grant." },
+      { title: "Electrical Services Taupō | Solar, New Builds, Renovations, EV Chargers | Balance Electrical" },
+      { name: "description", content: "Registered electrical services in Taupō — new builds, renovations, solar & battery storage, heat pump installation, EV chargers, and commercial fit-outs. Balance Electrical, Victoria Grant." },
+      { name: "robots", content: "index, follow, max-image-preview:large" },
+      { name: "geo.region", content: "NZ-WKO" },
+      { name: "geo.placename", content: "Taupo" },
+      { name: "keywords", content: "solar panel installation Taupo, solar electrician Taupo, battery storage Taupo, EV charger Taupo, registered electrician Taupo" },
       { property: "og:title", content: "Areas of Expertise — Balance Electrical" },
       { property: "og:description", content: "Registered electrical services across Taupō and the surrounding district." },
       { property: "og:image", content: photos.kitchen },
+    ],
+    links: [
+      { rel: "canonical", href: "https://www.balanceelectrical.co.nz/areas-of-expertise" },
     ],
   }),
   component: AreasOfExpertise,
@@ -103,6 +110,24 @@ const sections = [
       "Smart home pre-wiring and automation-ready installations",
       "Coordination with all other trades throughout the build",
     ],
+  },
+  {
+    num: "07",
+    heading: "Solar & battery storage",
+    bg: photos.twilight,
+    intro:
+      "Solar power is one of the smartest investments a Taupō homeowner can make — and getting it installed correctly from the start determines how well it performs for the next 25 years. As a registered electrician, Victoria handles the full electrical scope of your solar installation from inverter wiring through to grid connection approval.",
+    bullets: [
+      "Residential solar panel system wiring and installation",
+      "Battery storage system installation — Powerwall and compatible systems",
+      "Grid connection and meter upgrades",
+      "Solar and EV charger combined installations",
+      "Switchboard upgrades for solar-ready homes",
+      "Existing system inspections and fault finding",
+      "New build solar pre-wiring",
+    ],
+    closing:
+      "Victoria works alongside your solar panel supplier or can recommend trusted local suppliers. The electrical installation, grid connection approval, and sign-off is handled entirely by Balance Electrical.",
   },
 ];
 
@@ -210,7 +235,16 @@ function AreasOfExpertise() {
                         </li>
                       ))}
                     </ul>
-                    <div className="reveal mt-8" data-delay={String(180 + s.bullets.length * 60)}>
+                    {"closing" in s && (
+                      <p
+                        className="reveal mt-6 text-[14px] leading-relaxed text-[#888880]"
+                        style={{ fontFamily: "Inter, ui-sans-serif, system-ui, sans-serif" }}
+                        data-delay={String(180 + s.bullets.length * 60)}
+                      >
+                        {(s as typeof s & { closing: string }).closing}
+                      </p>
+                    )}
+                    <div className="reveal mt-8" data-delay={String(240 + s.bullets.length * 60)}>
                       <Link
                         to="/contact"
                         className="inline-flex items-center gap-1 text-[#C9933A] text-sm hover:gap-2 transition-all"

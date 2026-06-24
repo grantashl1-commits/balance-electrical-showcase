@@ -72,28 +72,32 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   );
 }
 
+const OG_IMAGE =
+  "https://qfrmbugbutkjnltnnasf.supabase.co/storage/v1/object/public/balance-photos/twlight.jpg.jpeg";
+
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
   head: () => ({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Balance Electrical showcases expert electrical services with a visually stunning, lighting-inspired website design." },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Balance Electrical showcases expert electrical services with a visually stunning, lighting-inspired website design." },
+      { title: "Electrician Taupō | Solar, EV Chargers & New Builds | Balance Electrical" },
+      { name: "description", content: "Victoria Grant is a registered electrician based in Taupō. New builds, renovations, solar installation, heat pumps, EV chargers and commercial electrical work across the Taupō district." },
+      { name: "author", content: "Balance Electrical" },
+      { name: "theme-color", content: "#0A0A0A" },
+      { property: "og:title", content: "Balance Electrical — Electrician Taupō" },
+      { property: "og:description", content: "Considered residential electrical work across Taupō and the Taupō district." },
       { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary" },
-      { name: "twitter:site", content: "@Lovable" },
-      { name: "twitter:title", content: "Lovable App" },
-      { name: "twitter:description", content: "Balance Electrical showcases expert electrical services with a visually stunning, lighting-inspired website design." },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/751fa260-8644-4384-80d4-dd0c563f41f8/id-preview-d97e6cf9--06555a04-43cd-430c-9d82-5f21fc158e30.lovable.app-1782279148454.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/751fa260-8644-4384-80d4-dd0c563f41f8/id-preview-d97e6cf9--06555a04-43cd-430c-9d82-5f21fc158e30.lovable.app-1782279148454.png" },
+      { property: "og:image", content: OG_IMAGE },
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:image", content: OG_IMAGE },
     ],
     links: [
+      { rel: "stylesheet", href: appCss },
+      { rel: "preconnect", href: "https://fonts.googleapis.com" },
+      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
         rel: "stylesheet",
-        href: appCss,
+        href: "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Inter:wght@300;400;500;600&display=swap",
       },
     ],
   }),
