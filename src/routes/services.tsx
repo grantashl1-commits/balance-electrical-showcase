@@ -6,7 +6,7 @@ export const Route = createFileRoute("/services")({
   head: () => ({
     meta: [
       { title: "Services — Balance Electrical" },
-      { name: "description", content: "Residential electrical services: new builds, renovations, lighting design, EV charging and more across Queenstown, Wānaka and Central Otago." },
+      { name: "description", content: "Residential electrical services: new builds, renovations, lighting design, EV charging and more across Taupō and the Taupō district." },
       { property: "og:title", content: "Services — Balance Electrical" },
       { property: "og:description", content: "From first conduit to final dim — considered residential electrical work." },
       { property: "og:image", content: photos.img0011 },

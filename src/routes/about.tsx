@@ -6,7 +6,7 @@ export const Route = createFileRoute("/about")({
   head: () => ({
     meta: [
       { title: "About — Victoria & Balance Electrical" },
-      { name: "description", content: "Owner-operated by Victoria. Considered residential electrical work across Queenstown, Wānaka and Central Otago." },
+      { name: "description", content: "Owner-operated by Victoria. Considered residential electrical work across Taupō and the Taupō district." },
       { property: "og:title", content: "About Balance Electrical" },
       { property: "og:description", content: "Meet Victoria — the owner-operator behind Balance Electrical." },
       { property: "og:image", content: photos.victoria },
@@ -43,10 +43,10 @@ function About() {
             and with one tradesperson on every project from first walkthrough to final commissioning.
           </p>
           <p className="text-muted-foreground">
-            A licensed electrician with more than a decade on premium residential builds across the
-            Southern Lakes, she works directly with architects, interior designers and a handful of
-            trusted builders. Every switch position, every drop, every dimming curve is discussed
-            before a single conduit is run.
+            A licensed electrician with more than a decade on premium residential builds across
+            Taupō and the surrounding district, she works directly with architects, interior designers
+            and a handful of trusted builders. Every switch position, every drop, every dimming curve
+            is discussed before a single conduit is run.
           </p>
           <p className="text-muted-foreground">
             The result: homes that feel calm at every hour. The kind of finish where, at night, the
@@ -56,11 +56,11 @@ function About() {
           <div className="grid grid-cols-2 gap-6 pt-6 border-t border-border/60">
             <div>
               <p className="text-sm uppercase tracking-[0.25em] text-primary">Based</p>
-              <p className="mt-1">Queenstown · Wānaka</p>
+              <p className="mt-1">Taupō</p>
             </div>
             <div>
               <p className="text-sm uppercase tracking-[0.25em] text-primary">Working across</p>
-              <p className="mt-1">Central Otago</p>
+              <p className="mt-1">Taupō district</p>
             </div>
             <div>
               <p className="text-sm uppercase tracking-[0.25em] text-primary">Registered</p>
