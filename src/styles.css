@@ -5,12 +5,14 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
+  /* Typography lifted from the Balance sign:
+     Garamond caps ("WATCH THIS SPACE", "LET'S TALK") + Josefin geometric caps ("LIGHTING DESIGN") */
   --font-display: "Cormorant Garamond", ui-serif, Georgia, serif;
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
+  --font-sans: "Josefin Sans", ui-sans-serif, system-ui, sans-serif;
+  --radius-sm: calc(var(--radius) - 2px);
+  --radius-md: var(--radius);
+  --radius-lg: calc(var(--radius) + 2px);
+  --radius-xl: calc(var(--radius) + 6px);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -30,217 +32,461 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
-  --color-brass: var(--brass);
-  --color-brass-soft: var(--brass-soft);
+
+  /* Brand palette — sampled from the sign's stone panel and frame */
+  --color-stone: var(--stone);
+  --color-stone-lit: var(--stone-lit);
+  --color-stone-pale: var(--stone-pale);
+  --color-stone-deep: var(--stone-deep);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-frame: var(--frame);
+  --color-night: var(--night);
+  --color-ivory: var(--ivory);
+  --color-timber: var(--timber);
+  --color-olive: var(--olive);
+  --color-dusk: var(--dusk);
+  --color-glow: var(--glow);
+  --color-glow-soft: var(--glow-soft);
+
+  --animate-marquee: marquee 40s linear infinite;
+  --animate-cue: cue 2.6s cubic-bezier(0.65, 0, 0.35, 1) infinite;
 }
 
-/* Warm, quiet, premium — the glow of considered lighting at night */
+/*
+  Balance — stone by day, light by night.
+  The page is the sign's taupe stone panel with charcoal type. Its black
+  frame becomes the "night" sections where the lighting does the talking.
+  2700K warm light is the only saturated colour.
+*/
 :root {
-  --radius: 0.5rem;
-  /* Balance Electrical — olive green brand palette */
-  --background: oklch(0.32 0.018 115);         /* #3A3E30 olive charcoal */
-  --foreground: oklch(0.95 0.012 90);          /* #F5F2EC warm ivory */
-  --card: oklch(0.38 0.020 115);               /* #4A4E3E */
-  --card-foreground: oklch(0.95 0.012 90);
-  --popover: oklch(0.38 0.020 115);
-  --popover-foreground: oklch(0.95 0.012 90);
-  --primary: oklch(0.65 0.045 115);            /* #8A9070 olive accent */
-  --primary-foreground: oklch(0.26 0.015 115); /* #2E3228 */
-  --secondary: oklch(0.42 0.020 115);
-  --secondary-foreground: oklch(0.95 0.012 90);
-  --muted: oklch(0.36 0.018 115);
-  --muted-foreground: oklch(0.78 0.015 95);    /* #C4C0B4 */
-  --accent: oklch(0.45 0.022 115);
-  --accent-foreground: oklch(0.95 0.012 90);
-  --destructive: oklch(0.55 0.18 25);
-  --destructive-foreground: oklch(0.98 0 0);
-  --border: oklch(0.42 0.018 115);             /* #4E5240 */
-  --input: oklch(0.40 0.018 115);
-  --ring: oklch(0.65 0.045 115);
-  --brass: oklch(0.65 0.045 115);
-  --brass-soft: oklch(0.72 0.040 115);
+  --radius: 0.125rem;
+
+  --stone: #a69486;
+  --stone-lit: #b8a89a;
+  --stone-pale: #d6cabd;
+  --stone-deep: #948274;
+  --ink: #1c1a18;
+  --ink-soft: #2e2924;
+  --frame: #1c1d1f;
+  --night: #121211;
+  --ivory: #ece4da;
+  --timber: #4c3524;
+  --olive: #806f30;
+  --dusk: #9eadbe;
+  --glow: #f2c88b;
+  --glow-soft: #ffe7c2;
+
+  --background: var(--stone);
+  --foreground: var(--ink);
+  --card: #ad9c8e;
+  --card-foreground: var(--ink);
+  --popover: #b3a395;
+  --popover-foreground: var(--ink);
+  --primary: var(--frame);
+  --primary-foreground: #e6dcd0;
+  --secondary: #9d8b7d;
+  --secondary-foreground: var(--ink);
+  --muted: #9d8b7d;
+  --muted-foreground: var(--ink-soft);
+  --accent: #b1a092;
+  --accent-foreground: var(--ink);
+  --destructive: #8e2f1f;
+  --destructive-foreground: #fbf7f2;
+  --border: rgb(28 26 24 / 0.16);
+  --input: rgb(28 26 24 / 0.3);
+  --ring: var(--frame);
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
 }
 
+/* Night sections — the sign's black frame. Re-themes every shadcn token inside. */
+.theme-night,
 .dark {
-  --background: oklch(0.32 0.018 115);
-  --foreground: oklch(0.95 0.012 90);
+  --background: var(--night);
+  --foreground: var(--ivory);
+  --card: #1b1a19;
+  --card-foreground: var(--ivory);
+  --popover: #1b1a19;
+  --popover-foreground: var(--ivory);
+  --primary: var(--stone-pale);
+  --primary-foreground: var(--frame);
+  --secondary: #252321;
+  --secondary-foreground: var(--ivory);
+  --muted: #211f1d;
+  --muted-foreground: #a89c8f;
+  --accent: #2a2724;
+  --accent-foreground: var(--ivory);
+  --border: rgb(214 202 189 / 0.14);
+  --input: rgb(214 202 189 / 0.26);
+  --ring: var(--glow);
+  color: var(--foreground);
 }
-
 
 @layer base {
-  * { border-color: var(--color-border); }
-  html { scroll-behavior: smooth; }
+  * {
+    border-color: var(--color-border);
+  }
+  html {
+    background-color: var(--stone);
+  }
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
     font-family: var(--font-sans);
-    font-feature-settings: "ss01", "cv11";
+    font-weight: 400;
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
   }
-  h1, h2, h3, h4, .font-display {
+  h1,
+  h2,
+  h3,
+  h4,
+  .font-display {
     font-family: var(--font-display);
     font-weight: 400;
-    letter-spacing: -0.01em;
+    letter-spacing: -0.005em;
+  }
+  ::selection {
+    background: var(--frame);
+    color: var(--stone-pale);
+  }
+  .theme-night ::selection {
+    background: var(--glow);
+    color: var(--frame);
+  }
+  :focus-visible {
+    outline: 1px solid currentColor;
+    outline-offset: 3px;
   }
 }
 
-@layer utilities {
-  .text-balance { text-wrap: balance; }
-  .glow {
-    box-shadow:
-      0 0 0 1px oklch(0.78 0.11 75 / 0.18),
-      0 30px 80px -30px oklch(0.78 0.11 75 / 0.35);
-  }
-  .warm-vignette {
-    background:
-      radial-gradient(ellipse at top, oklch(0.78 0.11 75 / 0.08), transparent 60%),
-      radial-gradient(ellipse at bottom, oklch(0.22 0.014 60), oklch(0.16 0.012 60));
-  }
-  .hairline { border-bottom: 1px solid color-mix(in oklch, var(--brass) 25%, transparent); }
+/* Lenis smooth scroll */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis:not(.lenis-autoToggle).lenis-stopped {
+  overflow: clip;
+}
+.lenis [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
+}
 
-  /* LED strip — horizontal */
-  .led-strip-h {
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  .text-pretty {
+    text-wrap: pretty;
+  }
+
+  /* Wide-tracked geometric caps — "LIGHTING DESIGN · NEW BUILDS" */
+  .eyebrow {
+    font-family: var(--font-sans);
+    font-size: 0.6875rem;
+    font-weight: 400;
+    letter-spacing: 0.34em;
+    text-transform: uppercase;
+    line-height: 1.7;
+  }
+  /* Garamond caps — "WATCH THIS SPACE" */
+  .display-caps {
+    font-family: var(--font-display);
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+  }
+
+  .text-glow {
+    text-shadow:
+      0 0 18px rgb(242 200 139 / 0.4),
+      0 0 60px rgb(242 200 139 / 0.2);
+  }
+  .text-outline {
+    color: transparent;
+    -webkit-text-stroke: 1px rgb(28 26 24 / 0.35);
+  }
+  .theme-night .text-outline {
+    -webkit-text-stroke: 1px rgb(214 202 189 / 0.3);
+  }
+
+  /* Stone texture — the concrete face of the sign */
+  .stone-texture {
+    background-color: var(--stone);
+    background-image:
+      radial-gradient(120% 80% at 15% 0%, rgb(255 255 255 / 0.1), transparent 55%),
+      radial-gradient(90% 70% at 100% 100%, rgb(28 26 24 / 0.12), transparent 60%),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.11 0 0 0 0 0.1 0 0 0 0 0.09 0 0 0 .38 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* Downlight scallops washing a stone wall from the ceiling line */
+  .scallops {
+    background-image: radial-gradient(
+      closest-side,
+      rgb(255 240 220 / 0.55),
+      rgb(255 232 200 / 0.18) 55%,
+      transparent
+    );
+    background-size: 280px 520px;
+    background-repeat: repeat-x;
+    background-position: center -150px;
+    mix-blend-mode: soft-light;
+  }
+
+  /* LED strip — the brand's signature hairline */
+  .led-h {
     height: 1px;
     width: 100%;
     background: linear-gradient(
       90deg,
-      transparent 0%,
-      rgba(138, 144, 112, 0.15) 15%,
-      rgba(138, 144, 112, 0.45) 50%,
-      rgba(138, 144, 112, 0.15) 85%,
-      transparent 100%
+      transparent,
+      rgb(242 200 139 / 0.15) 12%,
+      rgb(255 231 194 / 0.85) 50%,
+      rgb(242 200 139 / 0.15) 88%,
+      transparent
     );
-    box-shadow: 0 0 6px rgba(138, 144, 112, 0.2);
+    box-shadow: 0 0 14px rgb(242 200 139 / 0.45);
   }
-
-  /* LED strip — vertical */
-  .led-strip-v {
+  .led-v {
     width: 1px;
     height: 100%;
     background: linear-gradient(
       180deg,
-      transparent 0%,
-      rgba(138, 144, 112, 0.15) 15%,
-      rgba(138, 144, 112, 0.45) 50%,
-      rgba(138, 144, 112, 0.15) 85%,
-      transparent 100%
+      transparent,
+      rgb(242 200 139 / 0.15) 12%,
+      rgb(255 231 194 / 0.7) 50%,
+      rgb(242 200 139 / 0.15) 88%,
+      transparent
     );
-    box-shadow: 0 0 6px rgba(138, 144, 112, 0.2);
+    box-shadow: 0 0 10px rgb(242 200 139 / 0.3);
+  }
+  .rule {
+    height: 1px;
+    background: currentColor;
+    opacity: 0.28;
   }
 
-  /* Radial amber spotlight */
-  .spotlight-amber {
-    background:
-      radial-gradient(ellipse at 50% 0%, rgba(138, 144, 112, 0.18) 0%, transparent 65%),
-      #3A3E30;
+  .glow-ring {
+    box-shadow:
+      0 0 0 1px rgb(242 200 139 / 0.2),
+      0 30px 90px -30px rgb(242 200 139 / 0.45);
   }
 
-  /* Card glow effect */
-  .card-glow {
-    box-shadow: 0 0 0 1px rgba(138, 144, 112, 0.12), 0 8px 40px -15px rgba(138, 144, 112, 0.15);
+  /* Global film grain */
+  .grain::after {
+    content: "";
+    position: fixed;
+    inset: -50%;
+    z-index: 90;
+    pointer-events: none;
+    opacity: 0.06;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    animation: grain 1.2s steps(6) infinite;
   }
 
-  /* Scroll reveal */
-  .reveal {
-    opacity: 0;
-    transform: translateY(24px);
-    transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
-                transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  /* Link with a light-beam underline */
+  .beam-link {
+    position: relative;
   }
-  .reveal.revealed {
-    opacity: 1;
-    transform: translateY(0);
+  .beam-link::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -5px;
+    height: 1px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.6s var(--ease-out-expo);
   }
-
-  /* EWRB credential block */
-  .credential-block {
-    display: inline-flex;
-    align-items: center;
-    gap: 16px;
-    padding: 14px 20px;
-    border: 0.5px solid rgba(138, 144, 112, 0.3);
-    border-radius: 8px;
-    transition: border-color 0.4s ease, box-shadow 0.4s ease;
+  .theme-night .beam-link::after {
+    background: linear-gradient(90deg, transparent, var(--glow-soft), transparent);
+    box-shadow: 0 0 10px rgb(242 200 139 / 0.6);
   }
-  .credential-block:hover {
-    border-color: rgba(138, 144, 112, 0.7);
-    box-shadow: 0 0 20px rgba(138, 144, 112, 0.15);
-  }
-}
-
-/* ============================================================
-   MOBILE OPTIMISATION — scoped to ≤768px; desktop unchanged
-   ============================================================ */
-@media (max-width: 768px) {
-  /* Typography */
-  h1 { font-size: 48px; line-height: 1.15; }
-  h2 { font-size: 36px; line-height: 1.2; }
-  h3 { font-size: 26px; }
-  h4 { font-size: 20px; }
-  body, p { font-size: 16px; line-height: 1.7; }
-
-  /* Tap targets */
-  a, button {
-    min-height: 44px;
-    min-width: 44px;
-  }
-  /* Keep inline links from inheriting block sizing inside paragraphs */
-  p a, li a, nav a, footer a, .inline-link {
-    min-height: 0;
-    min-width: 0;
-    display: inline;
+  .beam-link:hover::after,
+  .beam-link[data-status="active"]::after,
+  .beam-link:focus-visible::after {
+    transform: scaleX(1);
+    transform-origin: left;
   }
 
-  /* Form controls — 16px prevents iOS zoom */
-  input, select, textarea {
-    font-size: 16px;
-    padding: 14px 16px;
-    width: 100%;
+  /* A beam of light sweeping across a button on hover */
+  .btn-sweep {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .btn-sweep::before {
+    content: "";
+    position: absolute;
+    inset: -2px;
+    z-index: -1;
+    background: linear-gradient(
+      100deg,
+      transparent 30%,
+      rgb(255 231 194 / 0.35) 50%,
+      transparent 70%
+    );
+    transform: translateX(-120%);
+    transition: transform 0.9s var(--ease-out-expo);
+  }
+  .btn-sweep:hover::before,
+  .btn-sweep:focus-visible::before {
+    transform: translateX(120%);
   }
 
-  /* Vertical LED strips hidden on mobile */
-  .led-strip-v { display: none; }
-
-  /* Mobile horizontal carousel for image grids */
-  [data-mobile-carousel] {
-    display: flex !important;
-    grid-template-columns: none !important;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    scroll-behavior: smooth;
-    gap: 12px;
-    padding: 0 4px 8px;
-    -webkit-overflow-scrolling: touch;
+  .no-scrollbar {
     scrollbar-width: none;
   }
-  [data-mobile-carousel]::-webkit-scrollbar { display: none; }
-  [data-mobile-carousel] > * {
-    flex: 0 0 80vw;
-    scroll-snap-align: center;
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
   }
 }
 
-@media (max-width: 480px) {
-  h1 { font-size: 40px; }
-  h2 { font-size: 30px; }
+@keyframes sweep {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(100%);
+  }
 }
 
-/* Respect reduced motion */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes cue {
+  0% {
+    transform: scaleY(0);
+    transform-origin: top;
+  }
+  45% {
+    transform: scaleY(1);
+    transform-origin: top;
+  }
+  55% {
+    transform: scaleY(1);
+    transform-origin: bottom;
+  }
+  100% {
+    transform: scaleY(0);
+    transform-origin: bottom;
+  }
+}
+
+@keyframes grain {
+  0% {
+    transform: translate(0, 0);
+  }
+  20% {
+    transform: translate(-3%, 2%);
+  }
+  40% {
+    transform: translate(2%, -3%);
+  }
+  60% {
+    transform: translate(-2%, -1%);
+  }
+  80% {
+    transform: translate(3%, 3%);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+}
+
+@keyframes beam-balance {
+  0% {
+    transform: rotate(0deg);
+  }
+  20% {
+    transform: rotate(-9deg);
+  }
+  45% {
+    transform: rotate(6deg);
+  }
+  65% {
+    transform: rotate(-3deg);
+  }
+  82% {
+    transform: rotate(1deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+.group:hover .logo-beam-hover,
+.group:focus-visible .logo-beam-hover {
+  animation: beam-balance 1.6s var(--ease-out-expo);
+}
+
+/* Preloader starts undrawn so hydration never flashes a finished logo */
+.preloader [data-logo-stroke],
+.preloader [data-logo-beam] {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+}
+.preloader [data-logo-tagline] {
+  opacity: 0;
+}
+
+@keyframes preloader-failsafe {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+/* Mobile: no iOS zoom on inputs */
+@media (max-width: 768px) {
+  input,
+  select,
+  textarea {
+    font-size: 16px;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .reveal {
-    opacity: 1 !important;
-    transform: none !important;
-    transition: none !important;
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
-  html { scroll-behavior: auto; }
 }
 
 /* iPhone safe-area insets */
 @supports (padding: env(safe-area-inset-bottom)) {
-  header { padding-top: env(safe-area-inset-top); }
-  footer { padding-bottom: calc(env(safe-area-inset-bottom)); }
+  footer {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
 }
 
-/* Never allow horizontal scroll */
-html, body { overflow-x: hidden; }
-
+/* Never allow horizontal scroll (clip keeps position: sticky working) */
+html,
+body {
+  overflow-x: clip;
+}

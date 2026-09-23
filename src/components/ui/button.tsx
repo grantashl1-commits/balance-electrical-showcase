@@ -16,12 +16,18 @@ const buttonVariants = cva(
         secondary: "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80",
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
+        // Balance: filled pill that "switches on" with a warm halo and light sweep
+        lux: "btn-sweep eyebrow rounded-full bg-primary text-primary-foreground shadow-none transition-[box-shadow,background-color,color] duration-500 hover:shadow-[0_0_0_1px_rgb(242_200_139/0.55),0_0_46px_-6px_rgb(242_200_139/0.75)]",
+        // Balance: hairline pill that fills on hover
+        luxOutline:
+          "eyebrow rounded-full border border-current/35 bg-transparent text-foreground transition-[background-color,color,border-color] duration-500 hover:border-foreground hover:bg-foreground hover:text-background",
       },
       size: {
         default: "h-9 px-4 py-2",
         sm: "h-8 rounded-md px-3 text-xs",
         lg: "h-10 rounded-md px-8",
         icon: "h-9 w-9",
+        xl: "h-14 px-9 text-[11px] [&_svg]:size-3.5",
       },
     },
     defaultVariants: {

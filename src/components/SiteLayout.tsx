@@ -1,118 +1,312 @@
 import { Link } from "@tanstack/react-router";
-import { useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
+import { ArrowUpRight } from "lucide-react";
+import { Logo } from "@/components/brand/Logo";
+import { Button } from "@/components/ui/button";
+import { Sheet, SheetClose, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { photos } from "@/lib/photos";
+import { CONTACT } from "@/lib/contact";
+import { cn } from "@/lib/utils";
+import { gsap, isFinePointer, prefersReducedMotion } from "@/lib/gsap";
 
 const nav = [
   { to: "/", label: "Home" },
   { to: "/about", label: "About" },
-  { to: "/areas-of-expertise", label: "Areas of Expertise" },
+  { to: "/areas-of-expertise", label: "Expertise" },
   { to: "/projects", label: "Projects" },
   { to: "/contact", label: "Contact" },
-];
+] as const;
 
 export function SiteLayout({ children }: { children: ReactNode }) {
-  const [open, setOpen] = useState(false);
   return (
-    <div className="min-h-screen flex flex-col bg-background text-foreground">
-      <header className="sticky top-0 z-40 backdrop-blur-md bg-background/75 border-b border-border/60">
-        <div className="mx-auto max-w-7xl px-6 py-4 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-3">
-            <img src={photos.logo} alt="Balance Electrical" className="h-9 w-auto" />
-          </Link>
-          <nav className="hidden md:flex items-center gap-9 text-sm tracking-wide">
-            {nav.map((n) => (
-              <Link
-                key={n.to}
-                to={n.to}
-                className="text-muted-foreground hover:text-primary transition-colors duration-300"
-                activeProps={{ className: "text-primary" }}
-                activeOptions={{ exact: true }}
-              >
-                {n.label}
-              </Link>
-            ))}
+    <div className="stone-texture flex min-h-screen flex-col text-foreground">
+      <SiteHeader />
+      <main className="flex-1">{children}</main>
+      <SiteFooter />
+    </div>
+  );
+}
+
+function SiteHeader() {
+  const [scrolled, setScrolled] = useState(false);
+  const [hidden, setHidden] = useState(false);
+  const [night, setNight] = useState(false);
+
+  // Compact on scroll; tuck away while reading down, return on scroll up.
+  useEffect(() => {
+    let last = window.scrollY;
+    let frame = 0;
+    const onScroll = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => {
+        const y = window.scrollY;
+        setScrolled(y > 24);
+        setHidden(y > 320 && y > last + 2);
+        if (y < last - 2) setHidden(false);
+        last = y;
+      });
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", onScroll);
+    };
+  }, []);
+
+  // Switch to ivory when a night section passes beneath the bar.
+  useEffect(() => {
+    const sections = document.querySelectorAll("[data-night]");
+    if (!sections.length) return;
+    const active = new Set<Element>();
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => (e.isIntersecting ? active.add(e.target) : active.delete(e.target)));
+        setNight(active.size > 0);
+      },
+      { rootMargin: "0px 0px -93% 0px" },
+    );
+    sections.forEach((s) => io.observe(s));
+    return () => io.disconnect();
+  }, []);
+
+  return (
+    <header
+      className={cn(
+        "fixed inset-x-0 top-0 z-50 transition-[transform,background-color,color,border-color] duration-700 [transition-timing-function:var(--ease-out-expo)]",
+        hidden && "-translate-y-full",
+        night ? "text-ivory" : "text-ink",
+        scrolled
+          ? night
+            ? "border-b border-ivory/10 bg-night/60 backdrop-blur-xl"
+            : "border-b border-ink/10 bg-stone/70 backdrop-blur-xl"
+          : "border-b border-transparent",
+      )}
+    >
+      <div className="mx-auto flex h-[72px] max-w-[1440px] items-center justify-between px-5 md:px-10">
+        <Link to="/" className="group -m-2 p-2" aria-label="Balance Electrical — home">
+          <Logo hoverBalance className="w-[132px] md:w-[152px]" />
+        </Link>
+
+        <nav className="hidden items-center gap-10 lg:flex" aria-label="Primary">
+          {nav.map((n) => (
             <Link
-              to="/contact"
-              className="ml-2 inline-flex items-center px-5 py-2 rounded-full border border-primary/40 text-primary hover:bg-primary hover:text-primary-foreground transition-all duration-300"
+              key={n.to}
+              to={n.to}
+              className="beam-link eyebrow text-[10.5px] opacity-75 transition-opacity duration-300 hover:opacity-100"
+              activeProps={{ className: "!opacity-100" }}
+              activeOptions={{ exact: true }}
             >
-              Request a quote
+              {n.label}
             </Link>
-          </nav>
-          <button
-            className="md:hidden text-foreground/80 p-2"
-            onClick={() => setOpen(!open)}
-            aria-label="Toggle menu"
+          ))}
+        </nav>
+
+        <div className="flex items-center gap-3">
+          <Button
+            asChild
+            variant="lux"
+            className={cn(
+              "hidden h-11 px-6 text-[10.5px] sm:inline-flex",
+              night && "bg-stone-pale text-frame",
+            )}
           >
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-              {open ? (
-                <path d="M6 6l12 12M6 18L18 6" strokeLinecap="round" />
-              ) : (
-                <path d="M4 7h16M4 12h16M4 17h16" strokeLinecap="round" />
-              )}
-            </svg>
-          </button>
+            <Link to="/contact">Let's talk</Link>
+          </Button>
+          <MobileNav />
         </div>
-        {open && (
-          <div className="md:hidden border-t border-border/60 bg-background/95">
-            <nav className="flex flex-col px-6 py-4 gap-3">
-              {nav.map((n) => (
+      </div>
+    </header>
+  );
+}
+
+function MobileNav() {
+  return (
+    <Sheet>
+      <SheetTrigger asChild>
+        <button
+          className="group relative -mr-2 flex size-11 items-center justify-center lg:hidden"
+          aria-label="Open menu"
+        >
+          <span className="absolute h-px w-6 -translate-y-[4px] bg-current transition-transform duration-500 group-hover:translate-x-0.5" />
+          <span className="absolute h-px w-6 translate-y-[4px] bg-current transition-transform duration-500 group-hover:-translate-x-0.5" />
+        </button>
+      </SheetTrigger>
+      <SheetContent
+        side="top"
+        className="theme-night h-[100dvh] border-none bg-night p-0 text-ivory [&>button]:right-5 [&>button]:top-6 [&>button]:size-8 [&>button]:focus:ring-0 [&>button]:focus-visible:ring-1"
+      >
+        <SheetTitle className="sr-only">Menu</SheetTitle>
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-x-0 top-0 h-[60vh]"
+          style={{
+            background:
+              "radial-gradient(60% 70% at 50% 0%, rgb(255 231 194 / 0.14), rgb(242 200 139 / 0.04) 50%, transparent 80%)",
+          }}
+        />
+        <div className="relative flex h-full flex-col px-6 pb-10 pt-6">
+          <Logo className="w-[132px] text-stone-pale" />
+          <nav className="mt-16 flex flex-col gap-2" aria-label="Mobile">
+            {nav.map((n, i) => (
+              <SheetClose asChild key={n.to}>
                 <Link
-                  key={n.to}
                   to={n.to}
-                  onClick={() => setOpen(false)}
-                  className="py-2 text-muted-foreground hover:text-primary"
-                  activeProps={{ className: "py-2 text-primary" }}
+                  className="display-caps flex items-baseline gap-4 py-2 text-[2.1rem] leading-none tracking-[0.14em] text-ivory/70 transition-colors hover:text-ivory"
+                  activeProps={{ className: "!text-ivory text-glow" }}
+                  activeOptions={{ exact: true }}
+                  style={{
+                    animation: `fadeInUp 0.8s var(--ease-out-expo) ${0.1 + i * 0.06}s both`,
+                  }}
                 >
+                  <span className="eyebrow text-[10px] text-muted-foreground">0{i + 1}</span>
                   {n.label}
                 </Link>
-              ))}
-            </nav>
-          </div>
-        )}
-      </header>
-
-      <main className="flex-1">{children}</main>
-
-      <footer className="mt-24 border-t border-border/60 bg-background">
-        <div className="mx-auto max-w-7xl px-6 py-14 grid gap-10 md:grid-cols-4">
-          <div className="md:col-span-2">
-            <img src={photos.logo} alt="Balance Electrical" className="h-10 w-auto mb-5" />
-            <p className="text-sm text-muted-foreground max-w-sm leading-relaxed">
-              Considered residential electrical work across Taupō and the surrounding district.
-              Owner-operated by Victoria — every detail measured, every finish quiet.
-            </p>
-            <img
-              src={photos.ewrbLogo}
-              alt="Licensed Electrical Worker — EWRB Registered"
-              className="h-12 w-auto mt-6 opacity-80"
-            />
-          </div>
-          <div>
-            <h4 className="text-sm uppercase tracking-[0.2em] text-primary mb-4">Explore</h4>
-            <ul className="space-y-2 text-sm text-muted-foreground">
-              {nav.map((n) => (
-                <li key={n.to}>
-                  <Link to={n.to} className="hover:text-primary transition-colors">{n.label}</Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div>
-            <h4 className="text-sm uppercase tracking-[0.2em] text-primary mb-4">Contact</h4>
-            <ul className="space-y-2 text-sm text-muted-foreground">
-              <li><a href="mailto:enquire@balanceelectrical.co.nz" className="hover:text-primary">enquire@balanceelectrical.co.nz</a></li>
-              <li><a href="tel:+64279162077" className="hover:text-primary">+64 27 916 2077</a></li>
-              <li>Taupō · Central North Island · New Zealand</li>
-            </ul>
+              </SheetClose>
+            ))}
+          </nav>
+          <div className="mt-auto space-y-2 text-sm text-muted-foreground">
+            <div className="led-h mb-6 opacity-60" />
+            <a href={CONTACT.tel} className="block font-display text-2xl text-ivory">
+              {CONTACT.phoneLocal}
+            </a>
+            <a href={`mailto:${CONTACT.email}`} className="block">
+              {CONTACT.email}
+            </a>
           </div>
         </div>
-        <div className="border-t border-border/60">
-          <div className="mx-auto max-w-7xl px-6 py-5 flex flex-col md:flex-row items-center justify-between gap-3 text-xs text-muted-foreground">
-            <p>© {new Date().getFullYear()} Balance Electrical Ltd. All rights reserved.</p>
-            <p>Licensed Electrical Worker · EWRB Registered</p>
+      </SheetContent>
+    </Sheet>
+  );
+}
+
+function SiteFooter() {
+  return (
+    <footer data-night className="theme-night relative overflow-hidden bg-frame text-ivory">
+      <div className="led-h opacity-70" />
+      <div className="mx-auto max-w-[1440px] px-5 pb-10 pt-24 md:px-10 md:pt-32">
+        <div className="grid gap-16 md:grid-cols-12">
+          <div className="md:col-span-6">
+            <p className="eyebrow text-muted-foreground">Let's talk</p>
+            <a
+              href={CONTACT.tel}
+              data-cursor="Call Victoria"
+              className="group mt-6 block font-display text-[clamp(2.4rem,6vw,5.2rem)] leading-none text-ivory transition-[text-shadow] duration-700 hover:text-glow"
+            >
+              {CONTACT.phoneLocal}
+            </a>
+            <a
+              href={`mailto:${CONTACT.email}`}
+              className="beam-link mt-6 inline-flex items-center gap-2 text-base text-ivory/80 hover:text-ivory"
+            >
+              {CONTACT.email}
+              <ArrowUpRight className="size-4" />
+            </a>
+          </div>
+          <div className="grid grid-cols-2 gap-10 md:col-span-6 md:grid-cols-3">
+            <div>
+              <p className="eyebrow mb-5 text-muted-foreground">Explore</p>
+              <ul className="space-y-3 text-sm">
+                {nav.map((n) => (
+                  <li key={n.to}>
+                    <Link to={n.to} className="beam-link text-ivory/80 hover:text-ivory">
+                      {n.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div>
+              <p className="eyebrow mb-5 text-muted-foreground">Services</p>
+              <ul className="space-y-3 text-sm text-ivory/80">
+                <li>Lighting design</li>
+                <li>New builds</li>
+                <li>Renovations</li>
+                <li>Commercial</li>
+                <li>Solar & battery</li>
+                <li>Air conditioning</li>
+              </ul>
+            </div>
+            <div className="col-span-2 md:col-span-1">
+              <p className="eyebrow mb-5 text-muted-foreground">Working across</p>
+              <p className="text-sm leading-relaxed text-ivory/80">
+                Taupō · Kinloch · Acacia Bay · Wairakei · Turangi · Central North Island
+              </p>
+              <img
+                src={photos.ewrbLogo}
+                alt="Licensed Electrical Worker — EWRB Registered"
+                loading="lazy"
+                className="mt-8 h-12 w-auto opacity-80"
+              />
+            </div>
           </div>
         </div>
-      </footer>
+
+        <GiantLogo />
+
+        <div className="flex flex-col items-start justify-between gap-3 border-t border-ivory/10 pt-6 text-xs text-muted-foreground md:flex-row md:items-center">
+          <p>© {new Date().getFullYear()} Balance Electrical Ltd. All rights reserved.</p>
+          <p className="eyebrow text-[10px]">Licensed Electrical Worker · EWRB Registered</p>
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+/** Full-width wordmark in the dark; the cursor is a torch that lights its strokes. */
+function GiantLogo() {
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || prefersReducedMotion()) return;
+    const setX = gsap.quickTo(el, "--mx", { duration: 0.8, ease: "power3.out" });
+    const setY = gsap.quickTo(el, "--my", { duration: 0.8, ease: "power3.out" });
+
+    if (!isFinePointer()) {
+      // Touch: a slow sweep of light across the letters.
+      const tween = gsap.fromTo(
+        el,
+        { "--mx": -10 },
+        { "--mx": 110, duration: 6, ease: "sine.inOut", repeat: -1, yoyo: true },
+      );
+      gsap.set(el, { "--my": 50 });
+      return () => {
+        tween.kill();
+      };
+    }
+
+    const onMove = (e: PointerEvent) => {
+      const r = el.getBoundingClientRect();
+      setX(((e.clientX - r.left) / r.width) * 100);
+      setY(((e.clientY - r.top) / r.height) * 100);
+    };
+    window.addEventListener("pointermove", onMove, { passive: true });
+    return () => window.removeEventListener("pointermove", onMove);
+  }, []);
+
+  return (
+    <div
+      ref={ref}
+      aria-hidden
+      className="relative my-20 select-none md:my-28"
+      style={{ ["--mx" as string]: 50, ["--my" as string]: 50 }}
+    >
+      <Logo className="w-full text-ivory/[0.07]" title="" />
+      <div
+        className="absolute inset-0"
+        style={{
+          WebkitMaskImage:
+            "radial-gradient(circle min(22vw,280px) at calc(var(--mx) * 1%) calc(var(--my) * 1%), #000 0%, rgba(0,0,0,0.35) 45%, transparent 75%)",
+          maskImage:
+            "radial-gradient(circle min(22vw,280px) at calc(var(--mx) * 1%) calc(var(--my) * 1%), #000 0%, rgba(0,0,0,0.35) 45%, transparent 75%)",
+        }}
+      >
+        <Logo
+          className="w-full text-glow-soft [filter:drop-shadow(0_0_14px_rgb(242_200_139/0.7))_drop-shadow(0_0_40px_rgb(242_200_139/0.35))]"
+          title=""
+        />
+      </div>
     </div>
   );
 }

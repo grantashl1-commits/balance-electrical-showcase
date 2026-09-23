@@ -1,32 +1,60 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useEffect, useRef, useState } from "react";
+import { ArrowUpRight } from "lucide-react";
 import { SiteLayout } from "@/components/SiteLayout";
-import { useScrollReveal } from "@/hooks/use-scroll-reveal";
+import { Button } from "@/components/ui/button";
+import { Reveal, SplitReveal } from "@/components/motion/Reveal";
 import { photos } from "@/lib/photos";
+import { cn } from "@/lib/utils";
+import { useLenis } from "@/hooks/use-lenis";
 
 export const Route = createFileRoute("/areas-of-expertise")({
   head: () => ({
     meta: [
-      { title: "Electrical Services Taupō | Solar, New Builds, Renovations, EV Chargers | Balance Electrical" },
-      { name: "description", content: "Registered electrical services in Taupō — new builds, renovations, solar & battery storage, heat pump installation, EV chargers, and commercial fit-outs. Balance Electrical, Victoria Grant." },
+      {
+        title:
+          "Electrical Services Taupō | Solar, New Builds, Renovations, EV Chargers | Balance Electrical",
+      },
+      {
+        name: "description",
+        content:
+          "Registered electrical services in Taupō — new builds, renovations, solar & battery storage, heat pump installation, EV chargers, and commercial fit-outs. Balance Electrical, Victoria Grant.",
+      },
       { name: "robots", content: "index, follow, max-image-preview:large" },
       { name: "geo.region", content: "NZ-WKO" },
       { name: "geo.placename", content: "Taupo" },
-      { name: "keywords", content: "solar panel installation Taupo, solar electrician Taupo, battery storage Taupo, EV charger Taupo, registered electrician Taupo" },
+      {
+        name: "keywords",
+        content:
+          "solar panel installation Taupo, solar electrician Taupo, battery storage Taupo, EV charger Taupo, registered electrician Taupo",
+      },
       { property: "og:title", content: "Areas of Expertise — Balance Electrical" },
-      { property: "og:description", content: "Registered electrical services across Taupō and the surrounding district." },
+      {
+        property: "og:description",
+        content: "Registered electrical services across Taupō and the surrounding district.",
+      },
       { property: "og:image", content: photos.kitchen },
     ],
-    links: [
-      { rel: "canonical", href: "https://www.balanceelectrical.co.nz/areas-of-expertise" },
-    ],
+    links: [{ rel: "canonical", href: "https://www.balanceelectrical.co.nz/areas-of-expertise" }],
   }),
   component: AreasOfExpertise,
 });
 
-const sections = [
+type Area = {
+  num: string;
+  heading: string;
+  service: string;
+  bg: string;
+  intro: string;
+  bullets: string[];
+  closing?: string;
+};
+
+const sections: Area[] = [
   {
     num: "01",
     heading: "Residential",
+    service: "Renovation or addition",
     bg: photos.img0004,
     intro:
       "Whether you're building new or upgrading an existing home, getting your electrical work done by a registered electrician isn't just about quality — it's a legal requirement in New Zealand. Balance Electrical handles the full scope of residential electrical work.",
@@ -43,6 +71,7 @@ const sections = [
   {
     num: "02",
     heading: "Commercial",
+    service: "Commercial fit-out",
     bg: photos.img0004b,
     intro:
       "Whether you're tenanting, refurbishing, or upgrading, you can rely on Balance Electrical for all of your commercial electrical needs. We work with businesses, property managers, and developers across the Taupō district.",
@@ -59,6 +88,7 @@ const sections = [
   {
     num: "03",
     heading: "Air conditioning & heat pumps",
+    service: "Air conditioning & heat pumps",
     bg: photos.living,
     intro:
       "Victoria is an experienced heat pump installer working with all major brands. Whether you need a single room unit or a multi-zone system for a larger home or commercial space, Balance Electrical handles supply, installation, and commissioning.",
@@ -72,6 +102,7 @@ const sections = [
   {
     num: "04",
     heading: "EV charger installation",
+    service: "EV charging",
     bg: photos.twilight,
     intro:
       "EV ownership is growing fast across New Zealand and the Taupō district. A dedicated home EV charger installed by a registered electrician means faster charging, safer wiring, and a future-proofed install that meets current standards.",
@@ -85,6 +116,7 @@ const sections = [
   {
     num: "05",
     heading: "Maintenance & repairs",
+    service: "Something else",
     bg: photos.img0003,
     intro:
       "Need something fixed? Balance Electrical handles all general residential and commercial electrical maintenance and repairs across Taupō.",
@@ -99,6 +131,7 @@ const sections = [
   {
     num: "06",
     heading: "New builds",
+    service: "New residential build",
     bg: photos.fountainEntry,
     intro:
       "Balance Electrical works alongside builders, architects, and project managers to deliver the complete electrical fit-out for new residential builds — from first fix foundations through to final inspection and CCC.",
@@ -114,7 +147,8 @@ const sections = [
   {
     num: "07",
     heading: "Solar & battery storage",
-    bg: photos.twilight,
+    service: "Solar & battery storage",
+    bg: photos.sparrowhawkKinloch,
     intro:
       "Solar power is one of the smartest investments a Taupō homeowner can make — and getting it installed correctly from the start determines how well it performs for the next 25 years. As a registered electrician, Victoria handles the full electrical scope of your solar installation from inverter wiring through to grid connection approval.",
     bullets: [
@@ -132,180 +166,199 @@ const sections = [
 ];
 
 function AreasOfExpertise() {
-  useScrollReveal();
+  const [active, setActive] = useState(0);
+  const listRef = useRef<HTMLDivElement>(null);
+  const lenis = useLenis();
+
+  // The section crossing the middle of the viewport owns the sticky frame.
+  useEffect(() => {
+    const els = listRef.current?.querySelectorAll<HTMLElement>("[data-area]");
+    if (!els) return;
+    const io = new IntersectionObserver(
+      (entries) =>
+        entries.forEach((e) => {
+          if (e.isIntersecting) setActive(Number((e.target as HTMLElement).dataset.area));
+        }),
+      { rootMargin: "-48% 0px -48% 0px" },
+    );
+    els.forEach((el) => io.observe(el));
+    return () => io.disconnect();
+  }, []);
+
+  const jump = (i: number) => {
+    const el = document.getElementById(`area-${sections[i].num}`);
+    if (!el) return;
+    if (lenis) lenis.scrollTo(el, { offset: -120, duration: 1.4 });
+    else el.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
 
   return (
     <SiteLayout>
-      {/* HERO */}
-      <section className="relative w-full h-[50vh] min-h-[400px] overflow-hidden">
-        <img
-          src={photos.kitchen}
-          alt=""
-          className="absolute inset-0 w-full h-full object-cover"
-          style={{ opacity: 0.25 }}
-        />
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              "radial-gradient(ellipse at 50% 50%, rgba(138, 144, 112,0.18) 0%, transparent 65%), #3A3E30",
-            opacity: 0.85,
-          }}
-        />
-        <div className="relative z-10 mx-auto max-w-7xl px-6 h-full flex flex-col justify-end pb-20">
-          <p
-            className="reveal text-[10px] uppercase tracking-[0.2em] text-[#8A9070] mb-4"
-            style={{ fontFamily: "Inter, ui-sans-serif, system-ui, sans-serif" }}
-          >
-            WHAT WE DO
+      <section className="mx-auto max-w-[1440px] px-5 pb-16 pt-36 md:px-10 md:pb-24 md:pt-48">
+        <p className="eyebrow text-ink-soft">What we do</p>
+        <SplitReveal
+          as="h1"
+          immediate
+          delay={0.2}
+          className="display-caps mt-6 text-[clamp(2.8rem,8.6vw,8.4rem)] leading-[0.95] tracking-[0.08em]"
+        >
+          Areas of expertise.
+        </SplitReveal>
+        <Reveal delay={0.5} className="mt-10 grid gap-8 md:grid-cols-12 md:items-end">
+          <p className="max-w-xl text-[1.05rem] leading-relaxed text-ink-soft md:col-span-6">
+            Registered electrical services across Taupō and the surrounding district — seven
+            circuits, one standard of work.
           </p>
-          <h1
-            className="reveal font-display text-4xl md:text-6xl lg:text-7xl text-foreground italic font-light leading-[1.05]"
-            style={{ fontFamily: "'Cormorant Garamond', ui-serif, Georgia, serif", fontWeight: 300 }}
-          >
-            Areas of expertise.
-          </h1>
-          <p
-            className="reveal mt-4 text-[18px] text-[#C4C0B4] max-w-2xl"
-            style={{ fontFamily: "Inter, ui-sans-serif, system-ui, sans-serif", fontWeight: 300 }}
-          >
-            Registered electrical services across Taupō and the surrounding district.
-          </p>
-        </div>
+          <div className="flex flex-wrap gap-2 md:col-span-6 md:justify-end">
+            {sections.map((s, i) => (
+              <button
+                key={s.num}
+                type="button"
+                onClick={() => jump(i)}
+                className="eyebrow h-10 rounded-full border border-ink/20 px-4 text-[10px] transition-colors hover:border-ink hover:bg-ink hover:text-stone-pale"
+              >
+                {s.num}
+              </button>
+            ))}
+          </div>
+        </Reveal>
       </section>
-      <div className="led-strip-h" />
 
-      {/* SERVICE SECTIONS */}
-      {sections.map((s, i) => {
-        const even = i % 2 === 0;
-
-        return (
-          <section key={s.num} className="relative overflow-hidden bg-[#3A3E30]">
-            {/* Subtle background image */}
-            <img
-              src={s.bg}
-              alt=""
-              className="absolute inset-0 w-full h-full object-cover pointer-events-none"
-              style={{ opacity: 0.08 }}
-            />
-            <div className="relative mx-auto max-w-7xl px-6 py-20 md:py-28">
-              <div className={`grid md:grid-cols-2 gap-12 items-center ${even ? "" : "md:[direction:rtl]"}`}>
-                {/* Content side */}
-                <div className={`relative ${even ? "" : "md:[direction:ltr]"}`}>
-                  <div className={`absolute top-0 bottom-0 led-strip-v ${even ? "left-0" : ""}`} />
-                  <div className={even ? "pl-8 md:pl-12" : ""}>
-                    <p
-                      className="reveal text-[10px] uppercase tracking-[0.25em] text-[#8A9070] mb-4"
-                      style={{ fontFamily: "Inter, ui-sans-serif, system-ui, sans-serif" }}
+      <section className="mx-auto max-w-[1440px] px-5 pb-24 md:px-10 md:pb-40">
+        <div className="grid gap-10 lg:grid-cols-12 lg:gap-16">
+          {/* sticky frame: one photograph per circuit, switching on in turn */}
+          <div className="hidden lg:col-span-6 lg:block">
+            <div className="sticky top-[104px] flex h-[calc(100svh-140px)] gap-6">
+              <ol className="flex flex-col justify-center gap-4" aria-label="Circuits">
+                {sections.map((s, i) => (
+                  <li key={s.num}>
+                    <button
+                      type="button"
+                      onClick={() => jump(i)}
+                      className={cn(
+                        "eyebrow flex items-center gap-3 text-[10px] transition-opacity duration-500",
+                        active === i ? "opacity-100" : "opacity-40 hover:opacity-80",
+                      )}
+                      aria-current={active === i ? "true" : undefined}
                     >
+                      <span
+                        className={cn(
+                          "size-1.5 rounded-full transition-all duration-500",
+                          active === i
+                            ? "bg-glow-soft shadow-[0_0_10px_3px_rgb(255_231_194/0.9)]"
+                            : "bg-ink/40",
+                        )}
+                      />
                       {s.num}
-                    </p>
-                    <h2 className="reveal font-display text-3xl md:text-4xl lg:text-5xl text-[#F5F2EC] mb-5" data-delay="60">
-                      {s.heading}
-                    </h2>
-                    <p
-                      className="reveal text-[16px] leading-relaxed text-[#C4C0B4] mb-8"
-                      style={{ fontFamily: "Inter, ui-sans-serif, system-ui, sans-serif", fontWeight: 300 }}
-                      data-delay="120"
-                    >
-                      {s.intro}
-                    </p>
-                    <ul className="space-y-3" data-delay="180">
-                      {s.bullets.map((b, bi) => (
-                        <li
-                          key={bi}
-                          className="reveal flex items-start gap-3"
-                          data-delay={String(180 + bi * 60)}
-                        >
-                          <span
-                            className="mt-[7px] flex-shrink-0"
-                            style={{
-                              width: "4px",
-                              height: "4px",
-                              borderRadius: "50%",
-                              backgroundColor: "#8A9070",
-                            }}
-                          />
-                          <span
-                            className="text-[14px] leading-relaxed text-[#C4C0B4]"
-                            style={{ fontFamily: "Inter, ui-sans-serif, system-ui, sans-serif" }}
-                          >
-                            {b}
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
-                    {"closing" in s && (
-                      <p
-                        className="reveal mt-6 text-[14px] leading-relaxed text-[#C4C0B4]"
-                        style={{ fontFamily: "Inter, ui-sans-serif, system-ui, sans-serif" }}
-                        data-delay={String(180 + s.bullets.length * 60)}
-                      >
-                        {(s as typeof s & { closing: string }).closing}
-                      </p>
+                    </button>
+                  </li>
+                ))}
+              </ol>
+              <div className="relative flex-1 overflow-hidden border-[10px] border-frame bg-frame">
+                {sections.map((s, i) => (
+                  <img
+                    key={s.num}
+                    src={s.bg}
+                    alt=""
+                    aria-hidden
+                    loading={i < 2 ? "eager" : "lazy"}
+                    className={cn(
+                      "absolute inset-0 h-full w-full object-cover transition-[opacity,filter,transform] duration-[1200ms] [transition-timing-function:var(--ease-out-expo)]",
+                      active === i
+                        ? "scale-100 opacity-100 [filter:brightness(1)]"
+                        : "scale-[1.06] opacity-0 [filter:brightness(0.3)]",
                     )}
-                    <div className="reveal mt-8" data-delay={String(240 + s.bullets.length * 60)}>
-                      <Link
-                        to="/contact"
-                        className="inline-flex items-center gap-1 text-[#8A9070] text-sm hover:gap-2 transition-all"
-                        style={{ fontFamily: "Inter, ui-sans-serif, system-ui, sans-serif" }}
-                      >
-                        Get a quote
-                        <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Image side (placeholder for visual rhythm) */}
-                <div className={`relative ${even ? "" : "md:[direction:ltr]"}`}>
-                  <div className="reveal">
-                    <img
-                      src={s.bg}
-                      alt={s.heading}
-                      className="w-full rounded-md object-cover aspect-[4/3]"
-                      style={{
-                        opacity: 0.65,
-                        boxShadow: "0 0 0 1px rgba(138, 144, 112,0.10), 0 8px 40px -15px rgba(138, 144, 112,0.12)",
-                      }}
-                    />
-                  </div>
+                  />
+                ))}
+                {/* a sweep of light each time the circuit changes */}
+                <div
+                  key={active}
+                  aria-hidden
+                  className="pointer-events-none absolute inset-0 animate-[sweep_1.4s_var(--ease-out-expo)_both]"
+                  style={{
+                    background:
+                      "linear-gradient(100deg, transparent 35%, rgb(255 236 206 / 0.35) 50%, transparent 65%)",
+                    mixBlendMode: "screen",
+                  }}
+                />
+                <div className="absolute bottom-0 left-0 right-0 flex items-end justify-between bg-gradient-to-t from-black/70 to-transparent p-6 text-ivory">
+                  <p className="display-caps text-xl tracking-[0.14em]">
+                    {sections[active].heading}
+                  </p>
+                  <p className="font-display text-3xl">{sections[active].num}</p>
                 </div>
               </div>
             </div>
-          </section>
-        );
-      })}
+          </div>
 
-      {/* CTA */}
-      <section className="relative spotlight-amber">
-        <div className="led-strip-h" />
-        <div className="mx-auto max-w-3xl px-6 py-24 md:py-32 text-center">
-          <h2
-            className="reveal font-display text-4xl md:text-5xl text-foreground italic font-light mb-6"
-            style={{ fontFamily: "'Cormorant Garamond', ui-serif, Georgia, serif", fontWeight: 300 }}
+          <div ref={listRef} className="lg:col-span-6">
+            {sections.map((s, i) => (
+              <article
+                key={s.num}
+                id={`area-${s.num}`}
+                data-area={i}
+                className="scroll-mt-28 border-t border-ink/15 py-16 first:border-t-0 first:pt-0 md:py-24 lg:min-h-[80svh]"
+              >
+                <div className="relative mb-10 aspect-[4/3] overflow-hidden border-[6px] border-frame lg:hidden">
+                  <img
+                    src={s.bg}
+                    alt={s.heading}
+                    loading="lazy"
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+                <p className="eyebrow text-ink-soft">Circuit {s.num}</p>
+                <h2 className="display-caps mt-4 text-[clamp(1.9rem,3.2vw,3rem)] leading-[1.05] tracking-[0.1em]">
+                  {s.heading}
+                </h2>
+                <p className="mt-6 text-[1.05rem] leading-relaxed text-ink-soft">{s.intro}</p>
+                <ul className="mt-8 space-y-3">
+                  {s.bullets.map((b) => (
+                    <li key={b} className="flex items-start gap-4 leading-relaxed">
+                      <span className="mt-[0.7em] h-px w-5 shrink-0 bg-ink/50" />
+                      <span>{b}</span>
+                    </li>
+                  ))}
+                </ul>
+                {s.closing && <p className="mt-8 leading-relaxed text-ink-soft">{s.closing}</p>}
+                <Link
+                  to="/contact"
+                  search={{ service: s.service }}
+                  className="beam-link eyebrow mt-10 inline-flex items-center gap-2 text-[10px]"
+                >
+                  Get a quote <ArrowUpRight className="size-3" />
+                </Link>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section data-night className="theme-night relative overflow-hidden bg-night">
+        <div className="led-h opacity-70" />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute left-1/2 top-0 h-[70%] w-[70vw] -translate-x-1/2"
+          style={{
+            background:
+              "radial-gradient(50% 60% at 50% 0%, rgb(255 231 194 / 0.14), transparent 75%)",
+          }}
+        />
+        <div className="relative mx-auto max-w-3xl px-5 py-28 text-center md:py-40">
+          <SplitReveal
+            as="h2"
+            className="display-caps text-[clamp(2.2rem,5vw,4.4rem)] leading-[1] tracking-[0.1em] text-ivory"
           >
             Not sure what you need?
-          </h2>
-          <p
-            className="reveal text-[#C4C0B4] text-lg leading-relaxed mb-10"
-            style={{ fontFamily: "Inter, ui-sans-serif, system-ui, sans-serif" }}
-            data-delay="100"
-          >
-            Get in touch and Victoria will talk you through it. No obligation, no jargon.
-          </p>
-          <div className="reveal" data-delay="200">
-            <Link
-              to="/contact"
-              className="inline-flex items-center gap-2 px-8 py-3 rounded-full text-[#3A3E30] font-medium transition-all duration-300 hover:shadow-[0_0_24px_rgba(138, 144, 112,0.4)]"
-              style={{
-                backgroundColor: "#8A9070",
-                fontFamily: "Inter, ui-sans-serif, system-ui, sans-serif",
-              }}
-            >
-              Get a quote →
-            </Link>
-          </div>
+          </SplitReveal>
+          <Reveal>
+            <p className="mx-auto mt-6 max-w-md leading-relaxed text-muted-foreground">
+              Get in touch and Victoria will talk you through it. No obligation, no jargon.
+            </p>
+            <Button asChild variant="lux" size="xl" className="mt-10">
+              <Link to="/contact">Get a quote</Link>
+            </Button>
+          </Reveal>
         </div>
       </section>
     </SiteLayout>
