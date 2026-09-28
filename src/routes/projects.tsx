@@ -7,6 +7,7 @@ import { Reveal, SplitReveal } from "@/components/motion/Reveal";
 import { TorchArea } from "@/components/motion/Torch";
 import { Lightbox, type Shot } from "@/components/Lightbox";
 import { photos } from "@/lib/photos";
+import { getPhoto } from "@/lib/portfolio";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/projects")({
@@ -32,6 +33,11 @@ export const Route = createFileRoute("/projects")({
   }),
   component: Projects,
 });
+
+function fromPortfolio(slug: string, index: number, span: string, aspect: string) {
+  const p = getPhoto(slug, index);
+  return { src: p.lg, title: p.title, place: p.project, note: p.caption, aspect, span };
+}
 
 // Spans give the grid an editorial rhythm on large screens.
 const projects: (Shot & { span: string })[] = [
@@ -67,62 +73,14 @@ const projects: (Shot & { span: string })[] = [
     aspect: "aspect-[4/5]",
     span: "lg:col-span-4",
   },
-  {
-    src: photos.img0003,
-    title: "Hall study",
-    place: "Taupō",
-    note: "Reading light, charging detail.",
-    aspect: "aspect-[4/5]",
-    span: "lg:col-span-4",
-  },
-  {
-    src: photos.img0004,
-    title: "Quiet bedroom",
-    place: "Taupō",
-    note: "Bedside circuits, blackout integration.",
-    aspect: "aspect-[4/5]",
-    span: "lg:col-span-4",
-  },
-  {
-    src: photos.img0004b,
-    title: "Bedroom detail",
-    place: "Taupō",
-    note: "Switching at hand height, in walnut.",
-    aspect: "aspect-[4/5]",
-    span: "lg:col-span-4",
-  },
-  {
-    src: photos.img0005,
-    title: "Pantry",
-    place: "Taupō",
-    note: "Concealed strip in shadow-line.",
-    aspect: "aspect-[4/5]",
-    span: "lg:col-span-4",
-  },
-  {
-    src: photos.img0006,
-    title: "Pendant rhythm",
-    place: "Taupō",
-    note: "Three pendants over stone.",
-    aspect: "aspect-[16/10]",
-    span: "lg:col-span-8",
-  },
-  {
-    src: photos.img0011jpeg,
-    title: "Bathroom",
-    place: "Taupō",
-    note: "IP-rated layered scheme.",
-    aspect: "aspect-[4/5]",
-    span: "lg:col-span-4",
-  },
-  {
-    src: photos.img0011,
-    title: "Stair",
-    place: "Taupō",
-    note: "Tread-level wash, dimmed after 10pm.",
-    aspect: "aspect-[4/5]",
-    span: "lg:col-span-4",
-  },
+  // Verified project photographs, credited to the project they come from.
+  fromPortfolio("the-curve-house", 2, "lg:col-span-4", "aspect-[4/5]"),
+  fromPortfolio("the-curve-house", 4, "lg:col-span-4", "aspect-[4/5]"),
+  fromPortfolio("the-kinloch-retreat", 0, "lg:col-span-4", "aspect-[4/5]"),
+  fromPortfolio("the-curve-house", 0, "lg:col-span-4", "aspect-[4/5]"),
+  fromPortfolio("oakleaf-residence", 0, "lg:col-span-8", "aspect-[16/10]"),
+  fromPortfolio("the-curve-house", 1, "lg:col-span-4", "aspect-[4/5]"),
+  fromPortfolio("oakleaf-residence", 2, "lg:col-span-4", "aspect-[4/5]"),
   {
     src: photos.img0419,
     title: "Detail",
@@ -154,6 +112,11 @@ function Projects() {
             details in between. Move through the room with your torch; tap any photograph to see it
             properly lit.
           </p>
+          <Button asChild variant="luxOutline" size="xl" className="mt-10">
+            <Link to="/portfolio">
+              Browse project by project <ArrowRight />
+            </Link>
+          </Button>
         </Reveal>
       </section>
 

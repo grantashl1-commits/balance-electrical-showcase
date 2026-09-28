@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { photos } from "@/lib/photos";
+import { getPhoto } from "@/lib/portfolio";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { gsap, prefersReducedMotion, useGSAP } from "@/lib/gsap";
@@ -18,10 +19,10 @@ const WORK: Shot[][] = [
       aspect: "aspect-[4/5]",
     },
     {
-      src: photos.img0005,
-      title: "Pantry",
-      place: "Taupō",
-      note: "Concealed strip in a shadow-line.",
+      src: getPhoto("oakleaf-residence", 3).lg,
+      title: "Kitchen & dining",
+      place: "Oakleaf Residence",
+      note: getPhoto("oakleaf-residence", 3).caption,
       aspect: "aspect-square",
     },
   ],
@@ -50,10 +51,10 @@ const WORK: Shot[][] = [
       aspect: "aspect-[4/5]",
     },
     {
-      src: photos.img0006,
-      title: "Pendant rhythm",
-      place: "Taupō",
-      note: "Three pendants over stone.",
+      src: getPhoto("oakleaf-residence", 4).lg,
+      title: "Lounge",
+      place: "Oakleaf Residence",
+      note: getPhoto("oakleaf-residence", 4).caption,
       aspect: "aspect-[3/4]",
     },
   ],
@@ -109,7 +110,7 @@ export function SelectedWork() {
             </SplitReveal>
           </div>
           <Button asChild variant="luxOutline" size="xl">
-            <Link to="/projects">View all projects</Link>
+            <Link to="/portfolio">Explore the portfolio</Link>
           </Button>
         </div>
 

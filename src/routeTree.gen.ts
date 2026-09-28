@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as ServicesRouteImport } from './routes/services'
 import { Route as ProjectsRouteImport } from './routes/projects'
+import { Route as PortfolioRouteImport } from './routes/portfolio'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as AreasOfExpertiseRouteImport } from './routes/areas-of-expertise'
 import { Route as AboutRouteImport } from './routes/about'
@@ -24,6 +25,11 @@ const ServicesRoute = ServicesRouteImport.update({
 const ProjectsRoute = ProjectsRouteImport.update({
   id: '/projects',
   path: '/projects',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PortfolioRoute = PortfolioRouteImport.update({
+  id: '/portfolio',
+  path: '/portfolio',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ContactRoute = ContactRouteImport.update({
@@ -52,6 +58,7 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/areas-of-expertise': typeof AreasOfExpertiseRoute
   '/contact': typeof ContactRoute
+  '/portfolio': typeof PortfolioRoute
   '/projects': typeof ProjectsRoute
   '/services': typeof ServicesRoute
 }
@@ -60,6 +67,7 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute
   '/areas-of-expertise': typeof AreasOfExpertiseRoute
   '/contact': typeof ContactRoute
+  '/portfolio': typeof PortfolioRoute
   '/projects': typeof ProjectsRoute
   '/services': typeof ServicesRoute
 }
@@ -69,6 +77,7 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/areas-of-expertise': typeof AreasOfExpertiseRoute
   '/contact': typeof ContactRoute
+  '/portfolio': typeof PortfolioRoute
   '/projects': typeof ProjectsRoute
   '/services': typeof ServicesRoute
 }
@@ -79,6 +88,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/areas-of-expertise'
     | '/contact'
+    | '/portfolio'
     | '/projects'
     | '/services'
   fileRoutesByTo: FileRoutesByTo
@@ -87,6 +97,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/areas-of-expertise'
     | '/contact'
+    | '/portfolio'
     | '/projects'
     | '/services'
   id:
@@ -95,6 +106,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/areas-of-expertise'
     | '/contact'
+    | '/portfolio'
     | '/projects'
     | '/services'
   fileRoutesById: FileRoutesById
@@ -104,6 +116,7 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   AreasOfExpertiseRoute: typeof AreasOfExpertiseRoute
   ContactRoute: typeof ContactRoute
+  PortfolioRoute: typeof PortfolioRoute
   ProjectsRoute: typeof ProjectsRoute
   ServicesRoute: typeof ServicesRoute
 }
@@ -122,6 +135,13 @@ declare module '@tanstack/react-router' {
       path: '/projects'
       fullPath: '/projects'
       preLoaderRoute: typeof ProjectsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/portfolio': {
+      id: '/portfolio'
+      path: '/portfolio'
+      fullPath: '/portfolio'
+      preLoaderRoute: typeof PortfolioRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/contact': {
@@ -160,6 +180,7 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   AreasOfExpertiseRoute: AreasOfExpertiseRoute,
   ContactRoute: ContactRoute,
+  PortfolioRoute: PortfolioRoute,
   ProjectsRoute: ProjectsRoute,
   ServicesRoute: ServicesRoute,
 }

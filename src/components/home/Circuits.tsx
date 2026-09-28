@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import { Link } from "@tanstack/react-router";
 import { ArrowUpRight } from "lucide-react";
 import { photos } from "@/lib/photos";
+import { getPhoto } from "@/lib/portfolio";
 import { gsap, ScrollTrigger, useGSAP } from "@/lib/gsap";
 import { SplitReveal } from "@/components/motion/Reveal";
 
@@ -9,7 +10,7 @@ const SERVICES = [
   {
     title: "Lighting design",
     service: "Lighting design",
-    img: photos.img0006,
+    img: getPhoto("the-curve-house", 0).sm,
     copy: "Layered schemes planned with your architect — scenes, circuits and fittings chosen before the first stud goes up.",
   },
   {
@@ -33,7 +34,7 @@ const SERVICES = [
   {
     title: "Solar & battery",
     service: "Solar & battery storage",
-    img: photos.sparrowhawkKinloch,
+    img: getPhoto("the-sisters", 0).sm,
     copy: "Inverter wiring through to grid connection approval, with battery storage sized for Taupō winters.",
   },
   {

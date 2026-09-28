@@ -5,6 +5,7 @@ import { SiteLayout } from "@/components/SiteLayout";
 import { Button } from "@/components/ui/button";
 import { Reveal, SplitReveal } from "@/components/motion/Reveal";
 import { photos } from "@/lib/photos";
+import { getPhoto } from "@/lib/portfolio";
 import { cn } from "@/lib/utils";
 import { useLenis } from "@/hooks/use-lenis";
 
@@ -148,7 +149,7 @@ const sections: Area[] = [
     num: "07",
     heading: "Solar & battery storage",
     service: "Solar & battery storage",
-    bg: photos.sparrowhawkKinloch,
+    bg: getPhoto("the-sisters", 0).lg,
     intro:
       "Solar power is one of the smartest investments a Taupō homeowner can make — and getting it installed correctly from the start determines how well it performs for the next 25 years. As a registered electrician, Victoria handles the full electrical scope of your solar installation from inverter wiring through to grid connection approval.",
     bullets: [
