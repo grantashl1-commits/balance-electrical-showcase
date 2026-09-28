@@ -73,7 +73,7 @@ const sections: Area[] = [
     num: "02",
     heading: "Commercial",
     service: "Commercial fit-out",
-    bg: photos.img0004b,
+    bg: getPhoto("beechtree-building-headquarters", "01-front-at-dusk").lg,
     intro:
       "Whether you're tenanting, refurbishing, or upgrading, you can rely on Balance Electrical for all of your commercial electrical needs. We work with businesses, property managers, and developers across the Taupō district.",
     bullets: [
@@ -90,7 +90,7 @@ const sections: Area[] = [
     num: "03",
     heading: "Air conditioning & heat pumps",
     service: "Air conditioning & heat pumps",
-    bg: photos.living,
+    bg: getPhoto("rainbow-reno", "02-kitchen").lg,
     intro:
       "Victoria is an experienced heat pump installer working with all major brands. Whether you need a single room unit or a multi-zone system for a larger home or commercial space, Balance Electrical handles supply, installation, and commissioning.",
     bullets: [
@@ -104,7 +104,7 @@ const sections: Area[] = [
     num: "04",
     heading: "EV charger installation",
     service: "EV charging",
-    bg: photos.twilight,
+    bg: getPhoto("pukeko", "02-driveway-at-dusk").lg,
     intro:
       "EV ownership is growing fast across New Zealand and the Taupō district. A dedicated home EV charger installed by a registered electrician means faster charging, safer wiring, and a future-proofed install that meets current standards.",
     bullets: [
@@ -149,7 +149,7 @@ const sections: Area[] = [
     num: "07",
     heading: "Solar & battery storage",
     service: "Solar & battery storage",
-    bg: getPhoto("the-sisters", 0).lg,
+    bg: getPhoto("the-sisters", "01-array").lg,
     intro:
       "Solar power is one of the smartest investments a Taupō homeowner can make — and getting it installed correctly from the start determines how well it performs for the next 25 years. As a registered electrician, Victoria handles the full electrical scope of your solar installation from inverter wiring through to grid connection approval.",
     bullets: [

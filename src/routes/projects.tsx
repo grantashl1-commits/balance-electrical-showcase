@@ -34,8 +34,8 @@ export const Route = createFileRoute("/projects")({
   component: Projects,
 });
 
-function fromPortfolio(slug: string, index: number, span: string, aspect: string) {
-  const p = getPhoto(slug, index);
+function fromPortfolio(slug: string, name: string, span: string, aspect: string) {
+  const p = getPhoto(slug, name);
   return { src: p.lg, title: p.title, place: p.project, note: p.caption, aspect, span };
 }
 
@@ -74,13 +74,13 @@ const projects: (Shot & { span: string })[] = [
     span: "lg:col-span-4",
   },
   // Verified project photographs, credited to the project they come from.
-  fromPortfolio("the-curve-house", 2, "lg:col-span-4", "aspect-[4/5]"),
-  fromPortfolio("the-curve-house", 4, "lg:col-span-4", "aspect-[4/5]"),
-  fromPortfolio("the-kinloch-retreat", 0, "lg:col-span-4", "aspect-[4/5]"),
-  fromPortfolio("the-curve-house", 0, "lg:col-span-4", "aspect-[4/5]"),
-  fromPortfolio("oakleaf-residence", 0, "lg:col-span-8", "aspect-[16/10]"),
-  fromPortfolio("the-curve-house", 1, "lg:col-span-4", "aspect-[4/5]"),
-  fromPortfolio("oakleaf-residence", 2, "lg:col-span-4", "aspect-[4/5]"),
+  fromPortfolio("the-curve-house", "03-kitchen-and-dining", "lg:col-span-4", "aspect-[4/5]"),
+  fromPortfolio("the-curve-house", "05-hallway", "lg:col-span-4", "aspect-[4/5]"),
+  fromPortfolio("the-kinloch-retreat", "01-exterior", "lg:col-span-4", "aspect-[4/5]"),
+  fromPortfolio("the-curve-house", "01-curved-deck-at-dusk", "lg:col-span-4", "aspect-[4/5]"),
+  fromPortfolio("oakleaf-residence", "01-courtyard-at-dusk", "lg:col-span-8", "aspect-[16/10]"),
+  fromPortfolio("the-curve-house", "02-aerial-at-sunset", "lg:col-span-4", "aspect-[4/5]"),
+  fromPortfolio("oakleaf-residence", "03-kitchen", "lg:col-span-4", "aspect-[4/5]"),
   {
     src: photos.img0419,
     title: "Detail",

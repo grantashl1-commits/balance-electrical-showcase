@@ -25,7 +25,8 @@ export const Route = createFileRoute("/portfolio")({
       { title: "Projects Portfolio | Electrician Taupō | Balance Electrical" },
       {
         name: "description",
-        content: `Project-by-project portfolio of Balance Electrical's residential and solar work across Taupō and Kinloch — ${PORTFOLIO.map((p) => p.title).join(", ")}.`,
+        content:
+          "Project-by-project portfolio of Balance Electrical's residential, commercial and solar work across Taupō and Kinloch — lighting, power and pre-wiring, photographed room by room.",
       },
       { name: "robots", content: "index, follow, max-image-preview:large" },
       { name: "geo.region", content: "NZ-WKO" },
@@ -33,7 +34,8 @@ export const Route = createFileRoute("/portfolio")({
       { property: "og:title", content: "Projects Portfolio — Balance Electrical" },
       {
         property: "og:description",
-        content: "Homes we've wired and lit across the Taupō district, project by project.",
+        content:
+          "Homes and buildings we've wired and lit across the Taupō district, project by project.",
       },
       { property: "og:image", content: `${SITE}${PORTFOLIO[0].photos[0].lg}` },
     ],
@@ -148,8 +150,8 @@ function PortfolioHero() {
       </SplitReveal>
       <Reveal delay={0.5} className="mt-10 grid gap-10 md:grid-cols-12 md:items-end">
         <p className="max-w-xl text-[1.05rem] leading-relaxed text-ink-soft md:col-span-6">
-          A closer look at homes we've wired and lit across the Taupō district — each project in its
-          own chapter, photographed as it's lived in.
+          A closer look at homes and buildings we've wired and lit across the Taupō district — each
+          project in its own chapter, from first fix to the finished glow.
         </p>
         <dl className="grid grid-cols-3 gap-6 border-t border-ink/15 pt-6 md:col-span-5 md:col-start-8">
           <div>
@@ -227,6 +229,8 @@ function Chapter({
 }) {
   const [cover, ...rest] = project.photos;
   const titleId = `${project.slug}-title`;
+  // A long single word (e.g. "Headquarters") must still fit the narrow sticky column.
+  const longTitle = Math.max(...project.title.split(" ").map((w) => w.length)) > 9;
 
   return (
     <article
@@ -242,7 +246,12 @@ function Chapter({
           <SplitReveal
             as="h2"
             id={titleId}
-            className="display-caps mt-5 text-[clamp(2rem,3.6vw,3.4rem)] leading-[1.02] tracking-[0.1em] text-ivory"
+            className={cn(
+              "display-caps mt-5 leading-[1.02] text-ivory",
+              longTitle
+                ? "text-[clamp(1.6rem,2.6vw,2.5rem)] tracking-[0.08em]"
+                : "text-[clamp(2rem,3.6vw,3.4rem)] tracking-[0.1em]",
+            )}
           >
             {project.title}
           </SplitReveal>
