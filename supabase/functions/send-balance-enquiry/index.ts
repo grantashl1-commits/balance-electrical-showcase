@@ -7,152 +7,193 @@ const corsHeaders = {
   "Access-Control-Allow-Methods": "POST, OPTIONS",
 };
 
+const INBOX = "enquire@balanceelectrical.co.nz";
+const FROM_WEBSITE = "Balance Electrical Website <enquiries@balanceelectrical.co.nz>";
+const FROM_BALANCE = "Balance Electrical <enquiries@balanceelectrical.co.nz>";
+const PHONE_DISPLAY = "027 916 2077";
+const PHONE_TEL = "+64279162077";
+const SITE = "https://www.balanceelectrical.co.nz";
+
+// Site palette — stone panel, ink type, warm glow accent.
+const C = {
+  page: "#d6cabd",
+  panel: "#ece4da",
+  stone: "#a69486",
+  ink: "#1c1a18",
+  soft: "#5a5048",
+  rule: "#c9bcae",
+  frame: "#1c1d1f",
+  glow: "#f2c88b",
+};
+
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+const json = (body: unknown, status = 200) =>
+  new Response(JSON.stringify(body), {
+    status,
+    headers: { ...corsHeaders, "Content-Type": "application/json" },
+  });
+
+const field = (v: unknown, max: number) => (typeof v === "string" ? v.trim().slice(0, max) : "");
+
+// Everything a visitor types is escaped before it goes anywhere near HTML.
+const esc = (s: string) =>
+  s.replace(
+    /[&<>"']/g,
+    (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]!,
+  );
+const multiline = (s: string) => esc(s).replace(/\r?\n/g, "<br>");
+const oneLine = (s: string) => s.replace(/[\r\n]+/g, " ");
+
+async function sendEmail(payload: Record<string, unknown>) {
+  const key = Deno.env.get("RESEND_API_KEY");
+  if (!key) throw new Error("RESEND_API_KEY is not set");
+  const res = await fetch("https://api.resend.com/emails", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", Authorization: `Bearer ${key}` },
+    body: JSON.stringify(payload),
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(`Resend ${res.status}: ${JSON.stringify(data)}`);
+  return data;
+}
+
+function shell(inner: string) {
+  return `<!doctype html><html><body style="margin:0;padding:0;background:${C.page};">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${C.page};padding:32px 12px;">
+<tr><td align="center">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;background:${C.panel};border:10px solid ${C.frame};font-family:Georgia,'Times New Roman',serif;color:${C.ink};">
+<tr><td style="padding:28px 36px 20px;border-bottom:1px solid ${C.rule};">
+<div style="font-size:22px;letter-spacing:0.42em;color:${C.ink};">BALANCE</div>
+<div style="font-family:Arial,Helvetica,sans-serif;font-size:10px;letter-spacing:0.32em;color:${C.soft};margin-top:6px;">ELECTRICAL · TAUPŌ</div>
+</td></tr>
+${inner}
+<tr><td style="padding:22px 36px 28px;border-top:1px solid ${C.rule};font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:1.7;color:${C.soft};">
+Victoria Grant · Registered Electrician<br>
+<a href="tel:${PHONE_TEL}" style="color:${C.ink};text-decoration:none;">${PHONE_DISPLAY}</a> ·
+<a href="mailto:${INBOX}" style="color:${C.ink};text-decoration:none;">${INBOX}</a> ·
+<a href="${SITE}" style="color:${C.ink};text-decoration:none;">balanceelectrical.co.nz</a>
+</td></tr>
+</table>
+</td></tr></table></body></html>`;
+}
+
+function rows(items: [string, string][]) {
+  return items
+    .map(
+      ([k, v]) => `<tr>
+<td style="padding:10px 0;border-bottom:1px solid ${C.rule};font-family:Arial,Helvetica,sans-serif;font-size:10px;letter-spacing:0.22em;text-transform:uppercase;color:${C.soft};width:120px;vertical-align:top;">${k}</td>
+<td style="padding:10px 0;border-bottom:1px solid ${C.rule};font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.6;color:${C.ink};">${v}</td>
+</tr>`,
+    )
+    .join("");
+}
+
 serve(async (req) => {
-  if (req.method === "OPTIONS") {
-    return new Response("ok", { headers: corsHeaders });
+  if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
+  if (req.method !== "POST") return json({ error: "Method not allowed" }, 405);
+
+  let body: Record<string, unknown>;
+  try {
+    body = await req.json();
+  } catch {
+    return json({ error: "Invalid request" }, 400);
   }
 
+  // Hidden field only bots fill in: pretend it worked and send nothing.
+  if (field(body.website, 200)) return json({ success: true, confirmation: true });
+
+  const full_name = field(body.full_name, 120);
+  const email = field(body.email, 200);
+  const phone = field(body.phone, 40);
+  const suburb = field(body.suburb, 120);
+  const service_type = field(body.service_type, 80) || "General enquiry";
+  const message = field(body.message, 5000);
+
+  if (!full_name || !email || !message) return json({ error: "Missing required fields" }, 400);
+  if (!EMAIL_RE.test(email)) return json({ error: "Invalid email address" }, 400);
+
+  const firstName = full_name.split(/\s+/)[0];
+  const nzNow = new Date().toLocaleString("en-NZ", {
+    timeZone: "Pacific/Auckland",
+    dateStyle: "medium",
+    timeStyle: "short",
+  });
+
+  // Keep a copy in the database, but never let that stop the email going out.
   try {
-    const body = await req.json();
-    console.log("Balance Electrical enquiry received:", JSON.stringify(body));
-
-    const { full_name, phone, email, suburb, service_type, message } = body;
-
-    if (!full_name || !phone || !email || !suburb || !service_type) {
-      return new Response(
-        JSON.stringify({ error: "Missing required fields" }),
-        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
-    }
-
     const supabase = createClient(
       Deno.env.get("SUPABASE_URL")!,
-      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
     );
-
-    // Log to database
-    const { error: dbError } = await supabase
-      .from("balance_enquiries")
-      .insert({
-        full_name,
-        phone,
-        email,
-        suburb,
-        service_type,
-        message: message || null,
-      });
-
-    if (dbError) {
-      console.error("DB error:", dbError.message);
-      throw new Error(`Database error: ${dbError.message}`);
-    }
-
-    console.log("Enquiry logged to database");
-
-    const nzNow = new Date().toLocaleString("en-NZ", { timeZone: "Pacific/Auckland" });
-
-    // Email to Victoria
-    const victoriaEmail = await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${Deno.env.get("RESEND_API_KEY")}`,
-      },
-      body: JSON.stringify({
-        from: "Balance Electrical Website <enquiries@balanceelectrical.co.nz>",
-        to: ["enquire@balanceelectrical.co.nz"],
-        reply_to: email,
-        subject: `New enquiry from ${full_name} — ${service_type}`,
-        html: `
-          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #0A0A0A; color: #F5F0E8; padding: 40px;">
-            <div style="border-bottom: 1px solid #C9933A; padding-bottom: 20px; margin-bottom: 24px;">
-              <h2 style="color: #C9933A; margin: 0; font-size: 20px; letter-spacing: 0.05em;">NEW ENQUIRY</h2>
-              <p style="color: #888880; font-size: 13px; margin: 4px 0 0;">Balance Electrical website · ${nzNow} NZST</p>
-            </div>
-            <table style="width: 100%; border-collapse: collapse;">
-              <tr>
-                <td style="padding: 10px 0; border-bottom: 1px solid #222220; color: #888880; font-size: 13px; width: 130px;">Name</td>
-                <td style="padding: 10px 0; border-bottom: 1px solid #222220; color: #F5F0E8; font-weight: bold;">${full_name}</td>
-              </tr>
-              <tr>
-                <td style="padding: 10px 0; border-bottom: 1px solid #222220; color: #888880; font-size: 13px;">Phone</td>
-                <td style="padding: 10px 0; border-bottom: 1px solid #222220; color: #F5F0E8;">${phone}</td>
-              </tr>
-              <tr>
-                <td style="padding: 10px 0; border-bottom: 1px solid #222220; color: #888880; font-size: 13px;">Email</td>
-                <td style="padding: 10px 0; border-bottom: 1px solid #222220;"><a href="mailto:${email}" style="color: #C9933A;">${email}</a></td>
-              </tr>
-              <tr>
-                <td style="padding: 10px 0; border-bottom: 1px solid #222220; color: #888880; font-size: 13px;">Suburb</td>
-                <td style="padding: 10px 0; border-bottom: 1px solid #222220; color: #F5F0E8;">${suburb}</td>
-              </tr>
-              <tr>
-                <td style="padding: 10px 0; border-bottom: 1px solid #222220; color: #888880; font-size: 13px;">Service</td>
-                <td style="padding: 10px 0; border-bottom: 1px solid #222220; color: #F5F0E8;">${service_type}</td>
-              </tr>
-              <tr>
-                <td style="padding: 10px 0; color: #888880; font-size: 13px; vertical-align: top; padding-top: 12px;">Message</td>
-                <td style="padding: 10px 0; color: #F5F0E8;">${message || "No message provided"}</td>
-              </tr>
-            </table>
-            <div style="margin-top: 32px; padding: 16px; border: 1px solid #222220;">
-              <a href="tel:${phone}" style="color: #C9933A; font-size: 16px; text-decoration: none;">Call ${full_name} →</a>
-            </div>
-          </div>
-        `,
-      }),
+    const { error } = await supabase.from("balance_enquiries").insert({
+      full_name,
+      phone: phone || null,
+      email,
+      suburb: suburb || null,
+      service_type,
+      message,
     });
-
-    const victoriaEmailData = await victoriaEmail.json();
-    console.log("Victoria notification:", JSON.stringify(victoriaEmailData));
-
-    if (!victoriaEmail.ok) {
-      throw new Error(`Resend error: ${JSON.stringify(victoriaEmailData)}`);
-    }
-
-    // Auto-reply to enquirer
-    await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${Deno.env.get("RESEND_API_KEY")}`,
-      },
-      body: JSON.stringify({
-        from: "Victoria — Balance Electrical <enquiries@balanceelectrical.co.nz>",
-        to: [email],
-        subject: "Thanks for your enquiry — Balance Electrical",
-        html: `
-          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #0A0A0A; color: #F5F0E8; padding: 40px;">
-            <div style="border-bottom: 1px solid #C9933A; padding-bottom: 20px; margin-bottom: 24px;">
-              <h2 style="color: #F5F0E8; margin: 0; font-size: 24px;">Thanks ${full_name.split(" ")[0]}.</h2>
-            </div>
-            <p style="color: #888880; line-height: 1.8;">I've received your enquiry about <span style="color: #C9933A;">${service_type}</span> and will be in touch within 24 hours.</p>
-            <p style="color: #888880; line-height: 1.8;">If you need to reach me sooner:</p>
-            <p style="font-size: 20px; color: #C9933A; margin: 24px 0;">
-              <a href="tel:+64279162077" style="color: #C9933A; text-decoration: none;">027 916 2077</a>
-            </p>
-            <div style="margin-top: 40px; padding-top: 24px; border-top: 1px solid #222220;">
-              <p style="color: #888880; font-size: 13px; margin: 0;">Victoria Grant</p>
-              <p style="color: #888880; font-size: 13px; margin: 4px 0;">Owner operator · Registered Electrician</p>
-              <p style="color: #888880; font-size: 13px; margin: 4px 0;">Balance Electrical · Taupō</p>
-              <a href="https://www.balanceelectrical.co.nz" style="color: #C9933A; font-size: 13px;">balanceelectrical.co.nz</a>
-            </div>
-          </div>
-        `,
-      }),
-    });
-
-    console.log("Auto-reply sent to enquirer");
-
-    return new Response(
-      JSON.stringify({ success: true }),
-      { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-    );
-  } catch (err) {
-    console.error("Edge function error:", err.message);
-    return new Response(
-      JSON.stringify({ error: err.message }),
-      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-    );
+    if (error) console.error("Enquiry not stored:", error.message);
+  } catch (e) {
+    console.error("Enquiry not stored:", (e as Error).message);
   }
+
+  const summary = rows([
+    ["Name", esc(full_name)],
+    ["Email", `<a href="mailto:${esc(email)}" style="color:${C.ink};">${esc(email)}</a>`],
+    [
+      "Phone",
+      phone ? `<a href="tel:${esc(phone)}" style="color:${C.ink};">${esc(phone)}</a>` : "—",
+    ],
+    ["Location", suburb ? esc(suburb) : "—"],
+    ["Project", esc(service_type)],
+    ["Message", multiline(message)],
+  ]);
+
+  // 1. The enquiry itself, to Victoria. If this fails the visitor is told to call instead.
+  try {
+    await sendEmail({
+      from: FROM_WEBSITE,
+      to: [INBOX],
+      reply_to: email,
+      subject: oneLine(`New enquiry — ${service_type} — ${full_name}`),
+      html: shell(`<tr><td style="padding:28px 36px 8px;">
+<div style="font-family:Arial,Helvetica,sans-serif;font-size:10px;letter-spacing:0.32em;color:${C.soft};">NEW PROJECT ENQUIRY · ${esc(nzNow)}</div>
+<div style="font-size:26px;line-height:1.25;margin:10px 0 18px;">${esc(full_name)}</div>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0">${summary}</table>
+<p style="font-family:Arial,Helvetica,sans-serif;font-size:13px;color:${C.soft};margin:22px 0 6px;">Reply to this email to answer ${esc(firstName)} directly.</p>
+</td></tr>`),
+    });
+  } catch (e) {
+    console.error("Enquiry email failed:", (e as Error).message);
+    return json({ error: "Enquiry could not be sent" }, 502);
+  }
+
+  // 2. Confirmation to the person who sent it.
+  let confirmation = true;
+  try {
+    await sendEmail({
+      from: FROM_BALANCE,
+      to: [email],
+      reply_to: INBOX,
+      subject: "Your enquiry has been sent — Balance Electrical",
+      html: shell(`<tr><td style="padding:30px 36px 10px;">
+<div style="font-size:28px;line-height:1.25;">Thanks, ${esc(firstName)}.</div>
+<p style="font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.75;color:${C.ink};margin:16px 0 0;">
+Your enquiry has been sent to Balance Electrical. Victoria will be in touch within the next few days to talk it through.</p>
+<p style="font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.75;color:${C.ink};margin:14px 0 0;">
+If it's urgent, call Victoria on <a href="tel:${PHONE_TEL}" style="color:${C.ink};font-weight:bold;text-decoration:none;">${PHONE_DISPLAY}</a>.</p>
+<div style="font-family:Arial,Helvetica,sans-serif;font-size:10px;letter-spacing:0.32em;color:${C.soft};margin:30px 0 4px;">WHAT YOU SENT</div>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0">${summary}</table>
+<p style="font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:1.7;color:${C.soft};margin:20px 0 6px;">
+Need to add something? Just reply to this email.</p>
+</td></tr>`),
+    });
+  } catch (e) {
+    confirmation = false;
+    console.error("Confirmation email failed:", (e as Error).message);
+  }
+
+  return json({ success: true, confirmation });
 });

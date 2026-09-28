@@ -1,6 +1,5 @@
 import { useRef, useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { photos } from "@/lib/photos";
 import { getPhoto } from "@/lib/portfolio";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -9,54 +8,23 @@ import { SplitReveal } from "@/components/motion/Reveal";
 import { TorchArea } from "@/components/motion/Torch";
 import { Lightbox, type Shot } from "@/components/Lightbox";
 
+function shot(slug: string, name: string, aspect: string): Shot {
+  const p = getPhoto(slug, name);
+  return { src: p.lg, title: p.title, place: p.project, note: p.caption, aspect };
+}
+
 const WORK: Shot[][] = [
   [
-    {
-      src: photos.kitchen,
-      title: "Kitchen",
-      place: "Taupō",
-      note: "Joinery-integrated lighting and switching.",
-      aspect: "aspect-[4/5]",
-    },
-    {
-      src: getPhoto("oakleaf-residence", "04-kitchen-and-dining").lg,
-      title: "Kitchen & dining",
-      place: "Oakleaf Residence",
-      note: getPhoto("oakleaf-residence", "04-kitchen-and-dining").caption,
-      aspect: "aspect-square",
-    },
+    shot("oakleaf-residence", "04-kitchen-and-dining", "aspect-[4/5]"),
+    shot("pukeko", "01-front-at-dusk", "aspect-square"),
   ],
   [
-    {
-      src: photos.living,
-      title: "Living room",
-      place: "Kinloch",
-      note: "Layered ambient and feature lighting.",
-      aspect: "aspect-[3/4]",
-    },
-    {
-      src: photos.img0419,
-      title: "Stair detail",
-      place: "Taupō district",
-      note: "Tread-level wash, dimmed after 10pm.",
-      aspect: "aspect-[4/5]",
-    },
+    shot("beechtree-building-headquarters", "03-stairwell-pendants", "aspect-[3/4]"),
+    shot("the-lakehouse", "01-island", "aspect-[4/5]"),
   ],
   [
-    {
-      src: photos.fountainEntry,
-      title: "Fountain entry",
-      place: "Taupō",
-      note: "Approach and entry lighting design.",
-      aspect: "aspect-[4/5]",
-    },
-    {
-      src: getPhoto("oakleaf-residence", "05-lounge").lg,
-      title: "Lounge",
-      place: "Oakleaf Residence",
-      note: getPhoto("oakleaf-residence", "05-lounge").caption,
-      aspect: "aspect-[3/4]",
-    },
+    shot("sparrowhawk", "02-deck-at-sunset", "aspect-[4/5]"),
+    shot("kinloch-project", "04-front-door", "aspect-[3/4]"),
   ],
 ];
 
@@ -106,7 +74,7 @@ export function SelectedWork() {
               id="work-title"
               className="display-caps mt-5 text-[clamp(2.2rem,5vw,4.6rem)] leading-[1] tracking-[0.1em] text-ivory"
             >
-              Selected residences
+              Selected work
             </SplitReveal>
           </div>
           <Button asChild variant="luxOutline" size="xl">

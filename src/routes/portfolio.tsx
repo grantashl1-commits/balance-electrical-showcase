@@ -139,7 +139,7 @@ function PortfolioHero() {
 
   return (
     <section className="mx-auto max-w-[1440px] px-5 pb-24 pt-36 md:px-10 md:pb-32 md:pt-48">
-      <p className="eyebrow text-ink-soft">Projects portfolio</p>
+      <p className="eyebrow text-ink-soft">Portfolio · Project stories</p>
       <SplitReveal
         as="h1"
         immediate
@@ -151,7 +151,12 @@ function PortfolioHero() {
       <Reveal delay={0.5} className="mt-10 grid gap-10 md:grid-cols-12 md:items-end">
         <p className="max-w-xl text-[1.05rem] leading-relaxed text-ink-soft md:col-span-6">
           A closer look at homes and buildings we've wired and lit across the Taupō district — each
-          project in its own chapter, from first fix to the finished glow.
+          project in its own chapter, from first fix to the finished glow. Prefer to browse by the
+          kind of work?{" "}
+          <Link to="/projects" className="beam-link text-ink">
+            Open the gallery
+          </Link>
+          .
         </p>
         <dl className="grid grid-cols-3 gap-6 border-t border-ink/15 pt-6 md:col-span-5 md:col-start-8">
           <div>

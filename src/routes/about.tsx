@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useRef } from "react";
-import { ArrowRight, Phone } from "lucide-react";
+import { ArrowRight, Award, Phone } from "lucide-react";
 import { SiteLayout } from "@/components/SiteLayout";
 import { CONTACT } from "@/lib/contact";
 import { Button } from "@/components/ui/button";
@@ -8,6 +8,8 @@ import { LightWords, Reveal, SplitReveal } from "@/components/motion/Reveal";
 import { photos } from "@/lib/photos";
 import { gsap, prefersReducedMotion, useGSAP } from "@/lib/gsap";
 import { onIntroDone } from "@/lib/intro";
+import { EwrbLogo } from "@/components/EwrbLogo";
+import { PORTFOLIO } from "@/lib/portfolio";
 
 export const Route = createFileRoute("/about")({
   head: () => ({
@@ -16,7 +18,7 @@ export const Route = createFileRoute("/about")({
       {
         name: "description",
         content:
-          "Victoria Grant is the registered electrician and owner of Balance Electrical in Taupō. Hands-on residential and commercial electrical work across the Taupō district.",
+          "Victoria Grant is the registered electrician and owner of Balance Electrical in Taupō — electrician on a Gold Award-winning home, commercial fit-outs, solar, heat pumps and lighting across the Taupō district.",
       },
       { name: "robots", content: "index, follow, max-image-preview:large" },
       { name: "geo.region", content: "NZ-WKO" },
@@ -80,32 +82,47 @@ function About() {
                 they get an electrician who answers the phone, shows up when she says she will, and
                 leaves the site clean.
               </p>
+              <p className="md:col-span-2">
+                Today that standard runs from the first cables through the framing to the last
+                fitting at handover — lake-edge homes in Kinloch, the Gold Award-winning Oakleaf
+                Residence, a two-storey headquarters for Beechtree Building, rooftop solar, heat
+                pumps and ducted heating, pool wiring, and the lighting that brings it all to life
+                after dark.
+              </p>
             </Reveal>
-            <Reveal className="mt-14">
+            <Reveal className="mt-14 flex flex-wrap gap-4">
               <a
                 href="https://www.ewrb.govt.nz"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="group inline-flex items-center gap-5 border border-ink/20 px-5 py-4 transition-[border-color,box-shadow] duration-500 hover:border-ink/50 hover:shadow-[0_20px_50px_-30px_rgb(28_26_24/0.6)]"
               >
-                <img
-                  src={photos.ewrbLogo}
-                  alt="EWRB Registered Electrician"
-                  loading="lazy"
-                  className="h-14 w-auto"
-                />
+                <EwrbLogo tone="dark" alt="EWRB Registered Electrician" className="h-14" />
                 <span className="eyebrow text-[10px] leading-relaxed">
                   Registered electrician
                   <br />
                   EWRB licence held
                 </span>
               </a>
+              <Link
+                to="/portfolio"
+                hash="oakleaf-residence"
+                className="group inline-flex max-w-md items-center gap-4 border border-ink/20 px-5 py-4 transition-[border-color,box-shadow] duration-500 hover:border-ink/50 hover:shadow-[0_20px_50px_-30px_rgb(28_26_24/0.6)]"
+              >
+                <Award className="size-8 shrink-0" strokeWidth={1.1} />
+                <span className="text-sm leading-snug">
+                  Electrician on the Oakleaf Residence — Gold Award, Master Builders House of the
+                  Year 2025, Bay of Plenty & Central Plateau
+                </span>
+              </Link>
             </Reveal>
           </div>
         </div>
       </section>
 
       <Values />
+
+      <RecentWork />
 
       <section className="relative mx-auto max-w-[1440px] px-5 py-28 md:px-10 md:py-40">
         <div className="grid items-end gap-12 md:grid-cols-2">
@@ -318,6 +335,68 @@ function Values() {
           ))}
         </div>
       </div>
+    </section>
+  );
+}
+
+const RECENT = [
+  "oakleaf-residence",
+  "beechtree-building-headquarters",
+  "sparrowhawk",
+  "the-sisters",
+];
+
+/** Four chapters from the portfolio, so the story ends on the work itself. */
+function RecentWork() {
+  const projects = RECENT.map((slug) => PORTFOLIO.find((p) => p.slug === slug)).filter(
+    (p) => p !== undefined,
+  );
+  return (
+    <section className="mx-auto max-w-[1440px] px-5 pt-28 md:px-10 md:pt-40">
+      <div className="flex flex-wrap items-end justify-between gap-8">
+        <div>
+          <p className="eyebrow text-ink-soft">Recent work</p>
+          <SplitReveal
+            as="h2"
+            className="display-caps mt-5 text-[clamp(2.2rem,5vw,4.6rem)] leading-[1] tracking-[0.1em]"
+          >
+            From the portfolio.
+          </SplitReveal>
+        </div>
+        <Button asChild variant="luxOutline" size="xl">
+          <Link to="/portfolio">
+            See every project <ArrowRight />
+          </Link>
+        </Button>
+      </div>
+      <Reveal
+        stagger={0.08}
+        className="mt-14 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6"
+      >
+        {projects.map((p) => (
+          <Link
+            key={p.slug}
+            to="/portfolio"
+            hash={p.slug}
+            data-cursor="Open"
+            className="group block"
+          >
+            <span className="relative block aspect-[4/5] overflow-hidden border-[6px] border-frame bg-frame">
+              <img
+                src={p.photos[0].sm}
+                alt={`${p.photos[0].title}, ${p.title}`}
+                loading="lazy"
+                decoding="async"
+                className="h-full w-full object-cover transition-transform duration-[1200ms] [transition-timing-function:var(--ease-out-expo)] group-hover:scale-[1.04]"
+              />
+            </span>
+            <span className="display-caps mt-4 block text-lg tracking-[0.14em]">{p.title}</span>
+            <span className="eyebrow mt-2 block text-[10px] text-ink-soft">
+              {p.location} · {p.tags.join(" · ")}
+            </span>
+          </Link>
+        ))}
+      </Reveal>
     </section>
   );
 }

@@ -599,6 +599,80 @@ export const PORTFOLIO: PortfolioProject[] = [
     ],
   },
   {
+    slug: "jarden-mile",
+    title: "Jarden Mile",
+    location: "Taupō",
+    tags: ["Residential", "Pool", "Heating"],
+    summary:
+      "A black board-and-batten home with a lap pool out the back. Balance wired the pool, installed the heat pump and ran ducted heating through the whole house — then brought the frontage to life after dark with lights set into the pavers, an LED line over the garage door and up/down lights on the cladding.",
+    detailsTitle: "The work",
+    details: [
+      "Swimming pool wiring",
+      "Heat pump installation",
+      "Ducted heating throughout the home",
+      "Lights set into the stepping-stone pavers",
+      "LED strip above the garage door; up/down wall lights",
+    ],
+    photos: [
+      photo(
+        "jarden-mile",
+        "01-front-at-dusk",
+        1440,
+        958,
+        "Front at dusk (render)",
+        "A digital dusk render of the lighting as installed: lights set into the pavers, an LED strip over the garage door, the lit entry and three up/down wall lights.",
+      ),
+      photo(
+        "jarden-mile",
+        "02-front-by-day",
+        720,
+        479,
+        "Front by day",
+        "Black board-and-batten, a double garage and a stepping-stone path to the entry.",
+      ),
+      photo(
+        "jarden-mile",
+        "03-lap-pool",
+        720,
+        479,
+        "Lap pool",
+        "The lap pool out back, with its pump and equipment wired as part of the job.",
+      ),
+      photo(
+        "jarden-mile",
+        "04-entry-and-hall",
+        720,
+        524,
+        "Entry & hall",
+        "A wire pendant floats in the raked entry; the hall runs the length of the house.",
+      ),
+      photo(
+        "jarden-mile",
+        "05-bedroom",
+        720,
+        479,
+        "Bedroom",
+        "Recessed downlights in the bedroom and through to the ensuite.",
+      ),
+      photo(
+        "jarden-mile",
+        "06-shower-niche",
+        720,
+        479,
+        "Shower niche",
+        "LED tucked into the tiled shower niche.",
+      ),
+      photo(
+        "jarden-mile",
+        "07-ensuite",
+        720,
+        479,
+        "Ensuite",
+        "An LED line along the ceiling edge and a lit niche in the ensuite.",
+      ),
+    ],
+  },
+  {
     slug: "the-sisters",
     title: "The Sisters",
     location: "Taupō district",
@@ -834,6 +908,34 @@ export function getPhoto(slug: string, name: string): PortfolioPhoto & { project
   const found = project?.photos.find((ph) => ph.name === name);
   if (!project || !found) throw new Error(`No portfolio photo ${slug}/${name}`);
   return { ...found, project: project.title };
+}
+
+/*
+  Gallery filters use a project's tags, except where one photo shows a different
+  kind of work from the rest of its project (e.g. the solar array vs the house).
+*/
+const PHOTO_TAGS: Record<string, string[]> = {
+  "the-sisters/01-array": ["Solar"],
+  "the-sisters/02-rooftops": ["Solar"],
+  "the-sisters/03-courtyard-wing": ["Solar"],
+  "the-sisters/04-rails-set-out": ["Solar"],
+  "the-sisters/05-exterior": ["Residential"],
+  "the-sisters/06-living-room": ["Residential"],
+  "the-sisters/07-living-and-dining": ["Residential"],
+  "the-sisters/08-kitchen": ["Residential"],
+  "jarden-mile/01-front-at-dusk": ["Residential"],
+  "jarden-mile/02-front-by-day": ["Residential"],
+  "jarden-mile/03-lap-pool": ["Pool"],
+  "jarden-mile/04-entry-and-hall": ["Residential", "Heating"],
+  "jarden-mile/05-bedroom": ["Residential", "Heating"],
+  "jarden-mile/06-shower-niche": ["Residential", "Heating"],
+  "jarden-mile/07-ensuite": ["Residential", "Heating"],
+  "rainbow-reno/02-kitchen": ["Residential", "Renovation", "Heating"],
+  "kinloch-project/07-during-the-build": ["New build", "First fix"],
+};
+
+export function photoTags(project: PortfolioProject, photo: PortfolioPhoto): string[] {
+  return PHOTO_TAGS[`${project.slug}/${photo.name}`] ?? project.tags;
 }
 
 export const PORTFOLIO_PHOTO_COUNT = PORTFOLIO.reduce((n, p) => n + p.photos.length, 0);

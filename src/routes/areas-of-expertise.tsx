@@ -5,7 +5,8 @@ import { SiteLayout } from "@/components/SiteLayout";
 import { Button } from "@/components/ui/button";
 import { Reveal, SplitReveal } from "@/components/motion/Reveal";
 import { photos } from "@/lib/photos";
-import { getPhoto } from "@/lib/portfolio";
+import { getPhoto, PORTFOLIO } from "@/lib/portfolio";
+import { serviceImage, type ServiceArt } from "@/lib/service-images";
 import { cn } from "@/lib/utils";
 import { useLenis } from "@/hooks/use-lenis";
 
@@ -45,68 +46,92 @@ type Area = {
   num: string;
   heading: string;
   service: string;
-  bg: string;
+  img: { src: string; alt: string; credit: string; focus?: string };
   intro: string;
   bullets: string[];
   closing?: string;
+  /** Portfolio chapters where this work can be seen. */
+  projects?: string[];
 };
+
+function shot(slug: string, name: string, focus?: string): Area["img"] {
+  const p = getPhoto(slug, name);
+  return { src: p.lg, alt: `${p.title}, ${p.project}`, credit: p.project, focus };
+}
+
+function withArt(name: ServiceArt, alt: string, fallback: Area["img"]): Area["img"] {
+  const src = serviceImage(name);
+  return src ? { src, alt, credit: alt } : fallback;
+}
 
 const sections: Area[] = [
   {
     num: "01",
     heading: "Residential",
     service: "Renovation or addition",
-    bg: photos.img0004,
+    img: { src: photos.img0004, alt: "Kitchen lighting in a Taupō home", credit: "Residential" },
     intro:
-      "Whether you're building new or upgrading an existing home, getting your electrical work done by a registered electrician isn't just about quality — it's a legal requirement in New Zealand. Balance Electrical handles the full scope of residential electrical work.",
+      "From lake-view new builds in Kinloch to a holiday home reworked room by room, Balance Electrical handles the full scope of residential electrical work. In New Zealand, using a registered electrician isn't just about quality — it's a legal requirement.",
     bullets: [
       "New build electrical fit-out — full installation from foundations to CCC",
       "Renovation wiring — additional circuits, partial rewires, room additions",
       "Switchboard upgrades — safety switches, modern distribution boards",
       "Lighting design and installation — interior, exterior, and garden lighting",
+      "Swimming pool and spa wiring",
       "Network and data cabling — home offices and media rooms",
-      "Air conditioning and heat pump installation",
       "General maintenance, fault finding, and repairs",
     ],
+    projects: ["oakleaf-residence", "the-curve-house", "pukeko", "rainbow-reno"],
   },
   {
     num: "02",
     heading: "Commercial",
     service: "Commercial fit-out",
-    bg: getPhoto("beechtree-building-headquarters", "01-front-at-dusk").lg,
+    img: shot("beechtree-building-headquarters", "01-front-at-dusk"),
     intro:
-      "Whether you're tenanting, refurbishing, or upgrading, you can rely on Balance Electrical for all of your commercial electrical needs. We work with businesses, property managers, and developers across the Taupō district.",
+      "Tenanting, refurbishing or building new. At Beechtree Building's two-storey headquarters we wired it all — the main switchboard and labelled sub-mains for every office and workshop, track lighting and high-bays, a pendant cluster through the stairwell and LED beneath the handrails.",
     bullets: [
       "New office and retail fit-outs",
-      "Warehouse and factory electrical installations",
+      "Warehouse and workshop electrical installations",
       "3-phase power installations",
-      "Commercial switchboard maintenance and upgrades",
+      "Commercial switchboards, sub-mains and cable containment",
       "Exit and emergency lighting — supply, install, and compliance testing",
       "Emergency breakdown and fault finding",
       "Data and voice cabling installations",
     ],
+    projects: ["beechtree-building-headquarters"],
   },
   {
     num: "03",
     heading: "Air conditioning & heat pumps",
     service: "Air conditioning & heat pumps",
-    bg: getPhoto("rainbow-reno", "02-kitchen").lg,
+    img: withArt(
+      "air-conditioning",
+      "Wall-mounted heat pump in a warmly lit living room",
+      shot("rainbow-reno", "02-kitchen", "100% 50%"),
+    ),
     intro:
-      "Victoria is an experienced heat pump installer working with all major brands. Whether you need a single room unit or a multi-zone system for a larger home or commercial space, Balance Electrical handles supply, installation, and commissioning.",
+      "Victoria is an experienced heat pump installer working with all major brands — from a single high-wall unit in a renovated holiday home to ducted heating throughout a new build. Supply, installation and commissioning, handled by one registered electrician.",
     bullets: [
       "Residential heat pump installation",
+      "Ducted heating throughout the home",
       "Commercial multi-zone systems",
       "Heat pump servicing and maintenance",
       "All major brands supplied and installed",
     ],
+    projects: ["rainbow-reno", "jarden-mile"],
   },
   {
     num: "04",
     heading: "EV charger installation",
     service: "EV charging",
-    bg: getPhoto("pukeko", "02-driveway-at-dusk").lg,
+    img: withArt(
+      "ev-charging",
+      "Wall-mounted EV charger beside a lit garage at dusk",
+      shot("pukeko", "02-driveway-at-dusk", "72% 50%"),
+    ),
     intro:
-      "EV ownership is growing fast across New Zealand and the Taupō district. A dedicated home EV charger installed by a registered electrician means faster charging, safer wiring, and a future-proofed install that meets current standards.",
+      "EV ownership is growing fast across the Taupō district. A dedicated home charger installed by a registered electrician means faster charging, safer wiring, and an install that's ready for whatever you drive next.",
     bullets: [
       "Level 2 home EV charger installation",
       "Commercial charging points for businesses and rental properties",
@@ -118,9 +143,9 @@ const sections: Area[] = [
     num: "05",
     heading: "Maintenance & repairs",
     service: "Something else",
-    bg: photos.img0003,
+    img: shot("beechtree-building-headquarters", "09-switchboard"),
     intro:
-      "Need something fixed? Balance Electrical handles all general residential and commercial electrical maintenance and repairs across Taupō.",
+      "Need something fixed? Balance Electrical handles general residential and commercial electrical maintenance and repairs across Taupō — tidy, tested and signed off.",
     bullets: [
       "Fault finding and diagnosis",
       "Safety switch installation and testing",
@@ -133,23 +158,24 @@ const sections: Area[] = [
     num: "06",
     heading: "New builds",
     service: "New residential build",
-    bg: photos.fountainEntry,
+    img: shot("kinloch-project", "03-entry-at-dusk"),
     intro:
-      "Balance Electrical works alongside builders, architects, and project managers to deliver the complete electrical fit-out for new residential builds — from first fix foundations through to final inspection and CCC.",
+      "From the first cable through the framing to the last fitting at handover, Balance Electrical works alongside builders, architects and project managers on new homes across the district — including the Gold Award-winning Oakleaf Residence.",
     bullets: [
       "Full new build electrical design and installation",
-      "First and second fix wiring",
+      "Pre-wiring and first fix, second fix and fit-off",
       "Switchboard design and installation",
       "Exterior and landscape lighting",
       "Smart home pre-wiring and automation-ready installations",
       "Coordination with all other trades throughout the build",
     ],
+    projects: ["oakleaf-residence", "sparrowhawk", "kinloch-project", "pre-wires"],
   },
   {
     num: "07",
     heading: "Solar & battery storage",
     service: "Solar & battery storage",
-    bg: getPhoto("the-sisters", "01-array").lg,
+    img: shot("the-sisters", "01-array"),
     intro:
       "Solar power is one of the smartest investments a Taupō homeowner can make — and getting it installed correctly from the start determines how well it performs for the next 25 years. As a registered electrician, Victoria handles the full electrical scope of your solar installation from inverter wiring through to grid connection approval.",
     bullets: [
@@ -163,6 +189,7 @@ const sections: Area[] = [
     ],
     closing:
       "Victoria works alongside your solar panel supplier or can recommend trusted local suppliers. The electrical installation, grid connection approval, and sign-off is handled entirely by Balance Electrical.",
+    projects: ["the-sisters"],
   },
 ];
 
@@ -171,7 +198,7 @@ function AreasOfExpertise() {
   const listRef = useRef<HTMLDivElement>(null);
   const lenis = useLenis();
 
-  // The section crossing the middle of the viewport owns the sticky frame.
+  // The section crossing the middle of the viewport is the one switched on.
   useEffect(() => {
     const els = listRef.current?.querySelectorAll<HTMLElement>("[data-area]");
     if (!els) return;
@@ -208,7 +235,7 @@ function AreasOfExpertise() {
         <Reveal delay={0.5} className="mt-10 grid gap-8 md:grid-cols-12 md:items-end">
           <p className="max-w-xl text-[1.05rem] leading-relaxed text-ink-soft md:col-span-6">
             Registered electrical services across Taupō and the surrounding district — seven
-            circuits, one standard of work.
+            circuits, one standard of work, each shown on a project we've wired.
           </p>
           <div className="flex flex-wrap gap-2 md:col-span-6 md:justify-end">
             {sections.map((s, i) => (
@@ -226,112 +253,96 @@ function AreasOfExpertise() {
       </section>
 
       <section className="mx-auto max-w-[1440px] px-5 pb-24 md:px-10 md:pb-40">
-        <div className="grid gap-10 lg:grid-cols-12 lg:gap-16">
-          {/* sticky frame: one photograph per circuit, switching on in turn */}
-          <div className="hidden lg:col-span-6 lg:block">
-            <div className="sticky top-[104px] flex h-[calc(100svh-140px)] gap-6">
-              <ol className="flex flex-col justify-center gap-4" aria-label="Circuits">
-                {sections.map((s, i) => (
-                  <li key={s.num}>
-                    <button
-                      type="button"
-                      onClick={() => jump(i)}
-                      className={cn(
-                        "eyebrow flex items-center gap-3 text-[10px] transition-opacity duration-500",
-                        active === i ? "opacity-100" : "opacity-40 hover:opacity-80",
-                      )}
-                      aria-current={active === i ? "true" : undefined}
-                    >
-                      <span
-                        className={cn(
-                          "size-1.5 rounded-full transition-all duration-500",
-                          active === i
-                            ? "bg-glow-soft shadow-[0_0_10px_3px_rgb(255_231_194/0.9)]"
-                            : "bg-ink/40",
-                        )}
-                      />
-                      {s.num}
-                    </button>
-                  </li>
-                ))}
-              </ol>
-              <div className="relative flex-1 overflow-hidden border-[10px] border-frame bg-frame">
-                {sections.map((s, i) => (
-                  <img
-                    key={s.num}
-                    src={s.bg}
-                    alt=""
-                    aria-hidden
-                    loading={i < 2 ? "eager" : "lazy"}
-                    className={cn(
-                      "absolute inset-0 h-full w-full object-cover transition-[opacity,filter,transform] duration-[1200ms] [transition-timing-function:var(--ease-out-expo)]",
-                      active === i
-                        ? "scale-100 opacity-100 [filter:brightness(1)]"
-                        : "scale-[1.06] opacity-0 [filter:brightness(0.3)]",
-                    )}
-                  />
-                ))}
-                {/* a sweep of light each time the circuit changes */}
-                <div
-                  key={active}
-                  aria-hidden
-                  className="pointer-events-none absolute inset-0 animate-[sweep_1.4s_var(--ease-out-expo)_both]"
-                  style={{
-                    background:
-                      "linear-gradient(100deg, transparent 35%, rgb(255 236 206 / 0.35) 50%, transparent 65%)",
-                    mixBlendMode: "screen",
-                  }}
-                />
-                <div className="absolute bottom-0 left-0 right-0 flex items-end justify-between bg-gradient-to-t from-black/70 to-transparent p-6 text-ivory">
-                  <p className="display-caps text-xl tracking-[0.14em]">
-                    {sections[active].heading}
-                  </p>
-                  <p className="font-display text-3xl">{sections[active].num}</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div ref={listRef} className="lg:col-span-6">
-            {sections.map((s, i) => (
+        <div ref={listRef}>
+          {sections.map((s, i) => {
+            const lit = active === i;
+            const flip = i % 2 === 1;
+            return (
               <article
                 key={s.num}
                 id={`area-${s.num}`}
                 data-area={i}
-                className="scroll-mt-28 border-t border-ink/15 py-16 first:border-t-0 first:pt-0 md:py-24 lg:min-h-[80svh]"
+                className="grid scroll-mt-28 gap-10 border-t border-ink/15 py-16 first:border-t-0 first:pt-0 md:py-24 lg:grid-cols-12 lg:gap-16"
               >
-                <div className="relative mb-10 aspect-[4/3] overflow-hidden border-[6px] border-frame lg:hidden">
-                  <img
-                    src={s.bg}
-                    alt={s.heading}
-                    loading="lazy"
-                    className="h-full w-full object-cover"
-                  />
-                </div>
-                <p className="eyebrow text-ink-soft">Circuit {s.num}</p>
-                <h2 className="display-caps mt-4 text-[clamp(1.9rem,3.2vw,3rem)] leading-[1.05] tracking-[0.1em]">
-                  {s.heading}
-                </h2>
-                <p className="mt-6 text-[1.05rem] leading-relaxed text-ink-soft">{s.intro}</p>
-                <ul className="mt-8 space-y-3">
-                  {s.bullets.map((b) => (
-                    <li key={b} className="flex items-start gap-4 leading-relaxed">
-                      <span className="mt-[0.7em] h-px w-5 shrink-0 bg-ink/50" />
-                      <span>{b}</span>
-                    </li>
-                  ))}
-                </ul>
-                {s.closing && <p className="mt-8 leading-relaxed text-ink-soft">{s.closing}</p>}
-                <Link
-                  to="/contact"
-                  search={{ service: s.service }}
-                  className="beam-link eyebrow mt-10 inline-flex items-center gap-2 text-[10px]"
+                {/* The photograph travels with its own text: pinned beside it, then leaves with it. */}
+                <figure
+                  className={cn(
+                    "relative self-start lg:sticky lg:top-28 lg:col-span-6",
+                    flip && "lg:order-2",
+                  )}
                 >
-                  Get a quote <ArrowUpRight className="size-3" />
-                </Link>
+                  <div className="relative aspect-[4/3] overflow-hidden border-[8px] border-frame bg-frame md:border-[10px] lg:aspect-[4/5] lg:max-h-[calc(100svh-160px)] lg:w-full">
+                    <img
+                      src={s.img.src}
+                      alt={s.img.alt}
+                      loading={i < 2 ? "eager" : "lazy"}
+                      decoding="async"
+                      style={{ objectPosition: s.img.focus }}
+                      className={cn(
+                        "h-full w-full object-cover transition-[filter,transform] duration-[1400ms] [transition-timing-function:var(--ease-out-expo)]",
+                        lit
+                          ? "scale-100 [filter:brightness(1)_saturate(1)]"
+                          : "scale-[1.04] [filter:brightness(0.45)_saturate(0.6)]",
+                      )}
+                    />
+                    {lit && (
+                      <div
+                        aria-hidden
+                        className="pointer-events-none absolute inset-0 animate-[sweep_1.4s_var(--ease-out-expo)_both]"
+                        style={{
+                          background:
+                            "linear-gradient(100deg, transparent 35%, rgb(255 236 206 / 0.35) 50%, transparent 65%)",
+                          mixBlendMode: "screen",
+                        }}
+                      />
+                    )}
+                    <figcaption className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-4 bg-gradient-to-t from-black/70 to-transparent p-5 text-ivory md:p-6">
+                      <span className="eyebrow text-[10px] text-glow-soft/90">{s.img.credit}</span>
+                      <span className="font-display text-3xl leading-none">{s.num}</span>
+                    </figcaption>
+                  </div>
+                </figure>
+
+                <div className={cn("lg:col-span-6 lg:py-4", flip && "lg:order-1")}>
+                  <p className="eyebrow text-ink-soft">Circuit {s.num}</p>
+                  <h2 className="display-caps mt-4 text-[clamp(1.9rem,3.2vw,3rem)] leading-[1.05] tracking-[0.1em]">
+                    {s.heading}
+                  </h2>
+                  <p className="mt-6 text-[1.05rem] leading-relaxed text-ink-soft">{s.intro}</p>
+                  <ul className="mt-8 space-y-3">
+                    {s.bullets.map((b) => (
+                      <li key={b} className="flex items-start gap-4 leading-relaxed">
+                        <span className="mt-[0.7em] h-px w-5 shrink-0 bg-ink/50" />
+                        <span>{b}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  {s.closing && <p className="mt-8 leading-relaxed text-ink-soft">{s.closing}</p>}
+                  {s.projects && (
+                    <div className="mt-10 border-t border-ink/15 pt-6">
+                      <p className="eyebrow text-[10px] text-ink-soft">See it in the portfolio</p>
+                      <ul className="mt-3 flex flex-wrap gap-x-5 gap-y-2">
+                        {s.projects.map((slug) => (
+                          <li key={slug}>
+                            <Link to="/portfolio" hash={slug} className="beam-link text-[0.98rem]">
+                              {PORTFOLIO.find((p) => p.slug === slug)?.title}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                  <Link
+                    to="/contact"
+                    search={{ service: s.service }}
+                    className="beam-link eyebrow mt-10 inline-flex items-center gap-2 text-[10px]"
+                  >
+                    Get a quote <ArrowUpRight className="size-3" />
+                  </Link>
+                </div>
               </article>
-            ))}
-          </div>
+            );
+          })}
         </div>
       </section>
 

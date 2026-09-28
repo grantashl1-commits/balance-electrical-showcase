@@ -67,7 +67,8 @@ export const Route = createFileRoute("/")({
       { property: "og:title", content: "Balance Electrical — Electrician Taupō" },
       {
         property: "og:description",
-        content: "Considered residential electrical work across Taupō and the Taupō district.",
+        content:
+          "Considered residential and commercial electrical work across Taupō and the Taupō district — lighting, new builds, solar and heat pumps.",
       },
       { property: "og:image", content: photos.twilight },
     ],

@@ -127,7 +127,7 @@ export function Hero() {
           data-hero-fade
           className="flex flex-wrap items-center justify-between gap-3 text-ink-soft"
         >
-          <p className="eyebrow">Electrical · Air conditioning · Solar</p>
+          <p className="eyebrow">Electrical · Lighting · Heat pumps · Solar</p>
           <p className="eyebrow">Taupō · Aotearoa</p>
         </div>
 
@@ -151,9 +151,9 @@ export function Hero() {
             </div>
             <div data-hero-fade className="md:col-span-5 md:col-start-8">
               <p className="max-w-md text-[1.02rem] leading-relaxed text-ink-soft">
-                Residential electrical design and installation across Taupō and the surrounding
-                district — lighting schemes that make architecture sing after dark. Owner-operated
-                by Victoria.
+                Electrical design and installation across Taupō and the surrounding district — from
+                a Gold Award-winning lake home to a two-storey commercial headquarters, with
+                lighting that makes architecture sing after dark. Owner-operated by Victoria.
               </p>
               <div className="mt-8 flex flex-wrap gap-3">
                 <Button asChild variant="lux" size="xl">
@@ -162,7 +162,7 @@ export function Hero() {
                   </Link>
                 </Button>
                 <Button asChild variant="luxOutline" size="xl">
-                  <Link to="/projects">See the work</Link>
+                  <Link to="/portfolio">See the work</Link>
                 </Button>
               </div>
             </div>

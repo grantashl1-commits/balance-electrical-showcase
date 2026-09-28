@@ -4,19 +4,30 @@ import { ArrowUpRight } from "lucide-react";
 import { Logo } from "@/components/brand/Logo";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetClose, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { photos } from "@/lib/photos";
 import { CONTACT } from "@/lib/contact";
 import { cn } from "@/lib/utils";
 import { gsap, isFinePointer, prefersReducedMotion } from "@/lib/gsap";
+import { EwrbLogo } from "@/components/EwrbLogo";
 
 const nav = [
   { to: "/", label: "Home" },
   { to: "/about", label: "About" },
   { to: "/areas-of-expertise", label: "Expertise" },
-  { to: "/projects", label: "Projects" },
+  { to: "/projects", label: "Gallery" },
   { to: "/portfolio", label: "Portfolio" },
   { to: "/contact", label: "Contact" },
 ] as const;
+
+// Footer service list → the matching circuit on Areas of Expertise.
+const SERVICE_LINKS: [string, string][] = [
+  ["Lighting design", "01"],
+  ["New builds", "06"],
+  ["Renovations", "01"],
+  ["Commercial", "02"],
+  ["Solar & battery", "07"],
+  ["Heat pumps & heating", "03"],
+  ["EV charging", "04"],
+];
 
 export function SiteLayout({ children }: { children: ReactNode }) {
   return (
@@ -219,13 +230,18 @@ function SiteFooter() {
             </div>
             <div>
               <p className="eyebrow mb-5 text-muted-foreground">Services</p>
-              <ul className="space-y-3 text-sm text-ivory/80">
-                <li>Lighting design</li>
-                <li>New builds</li>
-                <li>Renovations</li>
-                <li>Commercial</li>
-                <li>Solar & battery</li>
-                <li>Air conditioning</li>
+              <ul className="space-y-3 text-sm">
+                {SERVICE_LINKS.map(([label, area]) => (
+                  <li key={label}>
+                    <Link
+                      to="/areas-of-expertise"
+                      hash={`area-${area}`}
+                      className="beam-link text-ivory/80 hover:text-ivory"
+                    >
+                      {label}
+                    </Link>
+                  </li>
+                ))}
               </ul>
             </div>
             <div className="col-span-2 md:col-span-1">
@@ -233,12 +249,7 @@ function SiteFooter() {
               <p className="text-sm leading-relaxed text-ivory/80">
                 Taupō · Kinloch · Acacia Bay · Wairakei · Turangi · Central North Island
               </p>
-              <img
-                src={photos.ewrbLogo}
-                alt="Licensed Electrical Worker — EWRB Registered"
-                loading="lazy"
-                className="mt-8 h-12 w-auto opacity-80"
-              />
+              <EwrbLogo tone="light" className="mt-8 h-12" />
             </div>
           </div>
         </div>

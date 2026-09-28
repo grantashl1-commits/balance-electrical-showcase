@@ -1,59 +1,73 @@
 import { useEffect, useRef } from "react";
 import { Link } from "@tanstack/react-router";
 import { ArrowUpRight } from "lucide-react";
-import { getPhoto } from "@/lib/portfolio";
+import { getPhoto, type PortfolioPhoto } from "@/lib/portfolio";
+import { serviceImage, type ServiceArt } from "@/lib/service-images";
 import { gsap, ScrollTrigger, useGSAP } from "@/lib/gsap";
 import { SplitReveal } from "@/components/motion/Reveal";
 
+type Card = { src: string; alt: string; focus: string };
+
 // `focus` is the object-position that keeps the relevant detail inside the 4:5 crop.
+function fromPhoto(p: PortfolioPhoto & { project: string }, focus = "50% 50%"): Card {
+  return { src: p.lg, alt: `${p.title}, ${p.project}`, focus };
+}
+
+// Generated service artwork wins when present; otherwise the closest project photo.
+function art(name: ServiceArt, alt: string, fallback: Card): Card {
+  const src = serviceImage(name);
+  return src ? { src, alt, focus: "50% 50%" } : fallback;
+}
+
 const SERVICES = [
   {
     title: "Lighting design",
     service: "Lighting design",
-    photo: getPhoto("the-curve-house", "01-curved-deck-at-dusk"),
-    focus: "50% 50%",
+    card: fromPhoto(getPhoto("the-curve-house", "01-curved-deck-at-dusk")),
     copy: "Layered schemes planned with your architect — scenes, circuits and fittings chosen before the first stud goes up.",
   },
   {
     title: "New builds",
     service: "New residential build",
-    photo: getPhoto("sparrowhawk", "01-at-dusk"),
-    focus: "62% 50%",
+    card: fromPhoto(getPhoto("sparrowhawk", "01-at-dusk"), "62% 50%"),
     copy: "Complete electrical fit-out from foundations to CCC, coordinated with every trade on site.",
   },
   {
     title: "Renovations",
     service: "Renovation or addition",
-    photo: getPhoto("rainbow-reno", "01-lounge"),
-    focus: "45% 50%",
+    card: fromPhoto(getPhoto("pre-wires", "03-cable-drops")),
     copy: "New circuits, rewires and switchboards threaded carefully through the home you already love.",
   },
   {
     title: "Commercial",
     service: "Commercial fit-out",
-    photo: getPhoto("beechtree-building-headquarters", "02-entry-at-dusk"),
-    focus: "50% 50%",
+    card: fromPhoto(getPhoto("beechtree-building-headquarters", "02-entry-at-dusk")),
     copy: "Office and retail fit-outs, three-phase power, emergency lighting and compliance testing.",
   },
   {
     title: "Solar & battery",
     service: "Solar & battery storage",
-    photo: getPhoto("the-sisters", "01-array"),
-    focus: "50% 50%",
+    card: fromPhoto(getPhoto("the-sisters", "01-array")),
     copy: "Inverter wiring through to grid connection approval, with battery storage sized for Taupō winters.",
   },
   {
     title: "Air conditioning",
     service: "Air conditioning & heat pumps",
-    photo: getPhoto("rainbow-reno", "02-kitchen"),
-    focus: "100% 50%",
+    card: art(
+      "air-conditioning",
+      "Wall-mounted heat pump in a warmly lit living room",
+      fromPhoto(getPhoto("rainbow-reno", "02-kitchen"), "100% 50%"),
+    ),
     copy: "Heat pumps from all major brands — single rooms to multi-zone systems, supplied and commissioned.",
   },
   {
     title: "EV charging",
     service: "EV charging",
-    photo: getPhoto("pukeko", "02-driveway-at-dusk"),
-    focus: "72% 50%",
+    card: art(
+      "ev-charging",
+      "Wall-mounted EV charger beside a lit garage at dusk",
+      fromPhoto(getPhoto("pukeko", "02-driveway-at-dusk"), "72% 50%"),
+    ),
     copy: "Level 2 home chargers with load management, installed neatly and certified to NZ standards.",
   },
 ];
@@ -156,11 +170,11 @@ export function Circuits() {
               </div>
               <div className="relative mt-4 aspect-[4/5] overflow-hidden border-[6px] border-frame bg-frame">
                 <img
-                  src={s.photo.lg}
-                  alt={`${s.title} — ${s.photo.title}, ${s.photo.project}`}
+                  src={s.card.src}
+                  alt={`${s.title} — ${s.card.alt}`}
                   loading="lazy"
                   decoding="async"
-                  style={{ objectPosition: s.focus }}
+                  style={{ objectPosition: s.card.focus }}
                   className="h-full w-full object-cover transition-[filter,transform] duration-[1400ms] [filter:brightness(0.38)_saturate(0.45)] [transition-timing-function:var(--ease-out-expo)] group-hover:scale-[1.04] group-hover:[filter:brightness(1)_saturate(1)] group-data-[lit]:[filter:brightness(1)_saturate(1)]"
                 />
                 <div

@@ -9,7 +9,7 @@ import { Reveal, SplitReveal } from "@/components/motion/Reveal";
 const STATS = [
   { value: "1", label: "set of hands on every job" },
   { value: "EWRB", label: "registered & licensed" },
-  { value: "24h", label: "reply to every enquiry" },
+  { value: "Gold", label: "2025 House of the Year home" },
 ];
 
 export function Victoria() {
@@ -75,9 +75,9 @@ export function Victoria() {
           <Reveal>
             <p className="mt-8 max-w-xl text-[1.05rem] leading-relaxed text-ink-soft">
               Balance Electrical is led — and run — by Victoria Grant. Raised in Taupō, trained in
-              Wellington, back home to build something of her own. Every quote, every visit, every
-              cable run passes through one set of hands. That's why clients return, and why the
-              finishes are quiet.
+              Wellington, back home to build something of her own. From a Gold Award-winning lake
+              home to a commercial headquarters, every quote, every visit and every cable run passes
+              through one set of hands. That's why clients return, and why the finishes are quiet.
             </p>
           </Reveal>
           <Reveal

@@ -18,6 +18,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Reveal, SplitReveal } from "@/components/motion/Reveal";
+import { EwrbLogo } from "@/components/EwrbLogo";
 
 const PROJECT_TYPES = [
   "New residential build",
@@ -27,6 +28,7 @@ const PROJECT_TYPES = [
   "Air conditioning & heat pumps",
   "EV charging",
   "Commercial fit-out",
+  "Pool & spa wiring",
   "Pre-purchase report",
   "Something else",
 ];
@@ -69,6 +71,8 @@ function Contact() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [firstName, setFirstName] = useState("");
+  const [sentTo, setSentTo] = useState("");
+  const [confirmed, setConfirmed] = useState(true);
   const [serviceType, setServiceType] = useState(
     service && PROJECT_TYPES.includes(service) ? service : PROJECT_TYPES[0],
   );
@@ -86,12 +90,17 @@ function Contact() {
     const suburb = get("location");
     const service_type = serviceType;
     const message = get("message");
+    const website = get("website");
 
     setFirstName(full_name.split(" ")[0]);
+    setSentTo(email);
 
     try {
-      const { error: invokeError } = await supabase.functions.invoke("send-balance-enquiry", {
-        body: { full_name, phone, email, suburb, service_type, message },
+      const { data, error: invokeError } = await supabase.functions.invoke<{
+        success: boolean;
+        confirmation?: boolean;
+      }>("send-balance-enquiry", {
+        body: { full_name, phone, email, suburb, service_type, message, website },
       });
 
       if (invokeError) {
@@ -101,6 +110,7 @@ function Contact() {
         return;
       }
 
+      setConfirmed(data?.confirmation !== false);
       setSent(true);
     } catch (err) {
       console.error("Submission error:", err);
@@ -124,8 +134,8 @@ function Contact() {
         </SplitReveal>
         <Reveal delay={0.5}>
           <p className="mt-8 max-w-xl text-[1.05rem] leading-relaxed text-ink-soft">
-            New build, renovation, or a single beautifully lit room. A short note from you, a
-            thoughtful reply from Victoria — usually within the day.
+            New build, renovation, commercial fit-out or a single beautifully lit room. A short note
+            from you, and a considered reply from Victoria within a few days.
           </p>
         </Reveal>
       </section>
@@ -170,13 +180,29 @@ function Contact() {
                 </div>
               ) : sent ? (
                 <Status
-                  title={`Thanks${firstName ? `, ${firstName}` : ""}.`}
-                  body="Victoria will be in touch within 24 hours."
+                  title={`Sent. Thanks${firstName ? `, ${firstName}` : ""}.`}
+                  body="Your enquiry has been sent to Balance Electrical. Victoria will be in touch within the next few days."
+                  note={
+                    confirmed
+                      ? `A confirmation email is on its way to ${sentTo}.`
+                      : `We couldn't email a confirmation to ${sentTo}, but your enquiry has reached Victoria.`
+                  }
                   lit
                 />
               ) : (
                 <>
                   <p className="eyebrow text-[10px] text-muted-foreground">Project enquiry</p>
+                  {/* Honeypot: hidden from people, filled in by bots, ignored by the server. */}
+                  <div aria-hidden className="absolute -left-[9999px] h-px w-px overflow-hidden">
+                    <label htmlFor="website">Website</label>
+                    <input
+                      id="website"
+                      name="website"
+                      type="text"
+                      tabIndex={-1}
+                      autoComplete="off"
+                    />
+                  </div>
                   <div className="mt-8 grid gap-x-8 gap-y-8 sm:grid-cols-2">
                     <Field label="Your name" name="name" required autoComplete="name" />
                     <Field label="Email" name="email" type="email" required autoComplete="email" />
@@ -258,7 +284,8 @@ function Contact() {
               <div>
                 <dt className="eyebrow text-[10px] text-ink-soft">Response</dt>
                 <dd className="mt-2 leading-relaxed">
-                  Within 24 hours. Site visits booked from there.
+                  Within a few days, with a confirmation email the moment you send. Site visits
+                  booked from there.
                 </dd>
               </div>
               <div>
@@ -266,12 +293,9 @@ function Contact() {
                 <dd className="mt-2 leading-relaxed">Monday – Friday · 7:30am – 5:30pm</dd>
               </div>
             </dl>
-            <img
-              src={photos.ewrbLogo}
-              alt="Licensed Electrical Worker — EWRB Registered"
-              loading="lazy"
-              className="mt-auto h-14 w-auto self-start pt-10"
-            />
+            <div className="mt-auto pt-10">
+              <EwrbLogo tone="dark" className="h-14" />
+            </div>
           </aside>
         </Reveal>
       </section>
@@ -282,11 +306,13 @@ function Contact() {
 function Status({
   title,
   body,
+  note,
   pulse,
   lit,
 }: {
   title: string;
   body: string;
+  note?: string;
   pulse?: boolean;
   lit?: boolean;
 }) {
@@ -301,7 +327,8 @@ function Status({
         )}
       />
       <p className="display-caps mt-10 text-3xl tracking-[0.16em] text-ivory">{title}</p>
-      <p className="mt-4 text-muted-foreground">{body}</p>
+      <p className="mx-auto mt-4 max-w-md text-muted-foreground">{body}</p>
+      {note && <p className="mx-auto mt-3 max-w-md text-sm text-ivory/60">{note}</p>}
       {lit && (
         <a
           href={CONTACT.tel}
