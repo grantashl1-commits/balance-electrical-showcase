@@ -616,19 +616,11 @@ export const PORTFOLIO: PortfolioProject[] = [
     photos: [
       photo(
         "jarden-mile",
-        "01-front-at-dusk",
-        1440,
-        958,
-        "Front at dusk (render)",
-        "A digital dusk render of the lighting as installed: lights set into the pavers, an LED strip over the garage door, the lit entry and three up/down wall lights.",
-      ),
-      photo(
-        "jarden-mile",
         "02-front-by-day",
         720,
         479,
         "Front by day",
-        "Black board-and-batten, a double garage and a stepping-stone path to the entry.",
+        "Lights set into the stepping-stone pavers, an LED strip over the garage door and up/down wall lights, seen here by day.",
       ),
       photo(
         "jarden-mile",
@@ -923,7 +915,6 @@ const PHOTO_TAGS: Record<string, string[]> = {
   "the-sisters/06-living-room": ["Residential"],
   "the-sisters/07-living-and-dining": ["Residential"],
   "the-sisters/08-kitchen": ["Residential"],
-  "jarden-mile/01-front-at-dusk": ["Residential"],
   "jarden-mile/02-front-by-day": ["Residential"],
   "jarden-mile/03-lap-pool": ["Pool"],
   "jarden-mile/04-entry-and-hall": ["Residential", "Heating"],

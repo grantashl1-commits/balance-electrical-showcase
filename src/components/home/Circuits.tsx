@@ -53,11 +53,7 @@ const SERVICES = [
   {
     title: "Air conditioning",
     service: "Air conditioning & heat pumps",
-    card: art(
-      "air-conditioning",
-      "Wall-mounted heat pump in a warmly lit living room",
-      fromPhoto(getPhoto("rainbow-reno", "02-kitchen"), "100% 50%"),
-    ),
+    card: fromPhoto(getPhoto("rainbow-reno", "02-kitchen"), "100% 50%"),
     copy: "Heat pumps from all major brands — single rooms to multi-zone systems, supplied and commissioned.",
   },
   {

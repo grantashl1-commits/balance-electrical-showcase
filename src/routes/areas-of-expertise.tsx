@@ -105,11 +105,7 @@ const sections: Area[] = [
     num: "03",
     heading: "Air conditioning & heat pumps",
     service: "Air conditioning & heat pumps",
-    img: withArt(
-      "air-conditioning",
-      "Wall-mounted heat pump in a warmly lit living room",
-      shot("rainbow-reno", "02-kitchen", "100% 50%"),
-    ),
+    img: shot("rainbow-reno", "02-kitchen", "100% 50%"),
     intro:
       "Victoria is an experienced heat pump installer working with all major brands — from a single high-wall unit in a renovated holiday home to ducted heating throughout a new build. Supply, installation and commissioning, handled by one registered electrician.",
     bullets: [
